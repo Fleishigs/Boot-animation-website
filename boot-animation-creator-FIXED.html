@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boot Animation Creator - Flip Phone Edition</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #00ff41;
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px #00ff41;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 5px #00ff41, 0 0 10px #00ff41; }
+            to { text-shadow: 0 0 10px #00ff41, 0 0 20px #00ff41, 0 0 30px #00ff41; }
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #0ff;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .main-layout {
+            display: grid;
+            grid-template-columns: 1fr 400px 1fr;
+            gap: 30px;
+            align-items: start;
+        }
+
+        .control-panel {
+            background: rgba(0, 255, 65, 0.1);
+            border: 2px solid #00ff41;
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .section-title {
+            font-size: 1.3em;
+            margin-bottom: 15px;
+            color: #0ff;
+            border-bottom: 2px solid #0ff;
+            padding-bottom: 5px;
+        }
+
+        .upload-area {
+            border: 2px dashed #00ff41;
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 20px;
+            background: rgba(0, 255, 65, 0.05);
+        }
+
+        .upload-area:hover {
+            background: rgba(0, 255, 65, 0.15);
+            border-color: #0ff;
+        }
+
+        .upload-area.dragging {
+            background: rgba(0, 255, 65, 0.2);
+            border-color: #0ff;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .control-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #0ff;
+            font-weight: bold;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 6px;
+            background: rgba(0, 255, 65, 0.3);
+            outline: none;
+            border-radius: 3px;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #00ff41;
+            cursor: pointer;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #00ff41;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid #00ff41;
+            color: #00ff41;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .value-display {
+            text-align: right;
+            color: #00ff41;
+            margin-top: 5px;
+            font-size: 0.9em;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(45deg, #00ff41, #0ff);
+            border: none;
+            border-radius: 5px;
+            color: #000;
+            font-weight: bold;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 10px;
+            font-family: 'Courier New', monospace;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 255, 65, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Flip Phone Design */
+        .phone-container {
+            perspective: 1000px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px 0;
+        }
+
+        .flip-phone {
+            width: 240px;
+            position: relative;
+        }
+
+        .phone-hinge {
+            width: 200px;
+            height: 8px;
+            background: linear-gradient(90deg, #1a1a1a, #2a2a2a, #1a1a1a);
+            margin: 0 auto;
+            border-radius: 4px;
+            box-shadow: 
+                0 2px 4px rgba(0, 0, 0, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            position: relative;
+            z-index: 10;
+        }
+
+        .phone-top {
+            background: linear-gradient(145deg, #2d2d3d, #1a1a2a);
+            border-radius: 20px 20px 8px 8px;
+            padding: 15px 12px 12px 12px;
+            border: 3px solid #0a0a0a;
+            box-shadow: 
+                0 -5px 20px rgba(0, 0, 0, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            position: relative;
+        }
+
+        .speaker-grille {
+            width: 100px;
+            height: 8px;
+            background: #0a0a0a;
+            border-radius: 4px;
+            margin: 0 auto 12px;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.8);
+            position: relative;
+        }
+
+        .speaker-grille::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 10%;
+            right: 10%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #222, transparent);
+        }
+
+        .phone-screen {
+            width: 100%;
+            height: 280px;
+            background: #000;
+            border-radius: 6px;
+            border: 3px solid #0a0a0a;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 
+                inset 0 0 30px rgba(0, 0, 0, 0.9),
+                0 0 15px rgba(0, 255, 65, 0.3);
+        }
+
+        .screen-content {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            background: radial-gradient(ellipse at center, #001a00 0%, #000 100%);
+        }
+
+        .boot-logo {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+            display: none;
+        }
+
+        .boot-logo.active {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .placeholder-text {
+            color: #00ff41;
+            text-align: center;
+            font-size: 0.75em;
+            padding: 20px;
+            opacity: 0.6;
+            line-height: 1.6;
+        }
+
+        .phone-bottom {
+            background: linear-gradient(145deg, #2d2d3d, #1a1a2a);
+            border-radius: 8px 8px 20px 20px;
+            padding: 15px 12px 20px 12px;
+            border: 3px solid #0a0a0a;
+            border-top: none;
+            box-shadow: 
+                0 10px 30px rgba(0, 0, 0, 0.6),
+                inset 0 -1px 0 rgba(255, 255, 255, 0.05);
+        }
+
+        .phone-keypad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            padding: 0;
+        }
+
+        .key {
+            aspect-ratio: 1;
+            background: linear-gradient(145deg, #3a3a4e, #25252f);
+            border: 2px solid #1a1a1a;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #ccc;
+            font-size: 1em;
+            font-weight: bold;
+            box-shadow: 
+                0 3px 6px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1),
+                inset 0 -2px 4px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            transition: all 0.1s;
+            position: relative;
+        }
+
+        .key:active {
+            transform: translateY(1px);
+            box-shadow: 
+                0 1px 3px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .key small {
+            font-size: 0.5em;
+            color: #888;
+            margin-top: 2px;
+        }
+
+        .key.action {
+            background: linear-gradient(145deg, #00dd33, #00aa22);
+            color: #000;
+            border-color: #006611;
+        }
+
+        .key.center {
+            background: linear-gradient(145deg, #00cccc, #0099aa);
+            color: #000;
+            border-color: #005566;
+            font-size: 0.8em;
+        }
+
+        .key.dpad {
+            background: linear-gradient(145deg, #4a4a5e, #35353f);
+            border-radius: 8px;
+            font-size: 1.2em;
+        }
+
+        .phone-brand {
+            position: absolute;
+            top: 5px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 0.6em;
+            color: #666;
+            letter-spacing: 2px;
+        }
+
+        /* Timeline Controls */
+        .timeline-container {
+            margin-top: 20px;
+        }
+
+        .timeline {
+            width: 100%;
+            height: 80px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid #00ff41;
+            border-radius: 5px;
+            position: relative;
+            overflow-x: auto;
+            display: flex;
+            align-items: center;
+            padding: 5px;
+        }
+
+        .frame-thumbnails {
+            display: flex;
+            gap: 5px;
+            min-width: 100%;
+        }
+
+        .frame-thumb {
+            width: 60px;
+            height: 60px;
+            border: 2px solid #00ff41;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: all 0.2s;
+            object-fit: cover;
+            background: #000;
+        }
+
+        .frame-thumb:hover {
+            transform: scale(1.1);
+            border-color: #0ff;
+            box-shadow: 0 0 10px #0ff;
+        }
+
+        .frame-thumb.active {
+            border-color: #0ff;
+            box-shadow: 0 0 15px #0ff;
+        }
+
+        .playback-controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .playback-controls button {
+            flex: 1;
+        }
+
+        .info-panel {
+            background: rgba(0, 255, 65, 0.1);
+            border: 2px solid #00ff41;
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            margin-bottom: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 5px;
+            border-left: 3px solid #0ff;
+        }
+
+        .info-label {
+            color: #0ff;
+            font-weight: bold;
+        }
+
+        .info-value {
+            color: #00ff41;
+        }
+
+        .frame-list {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 15px;
+        }
+
+        .frame-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 5px;
+            margin-bottom: 5px;
+            border: 1px solid #00ff41;
+        }
+
+        .frame-item img {
+            width: 40px;
+            height: 40px;
+            border-radius: 3px;
+            object-fit: cover;
+        }
+
+        .frame-item span {
+            flex: 1;
+            color: #00ff41;
+        }
+
+        .frame-item button {
+            width: auto;
+            padding: 5px 10px;
+            margin: 0;
+            font-size: 0.8em;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #00ff41;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #0ff;
+        }
+
+        @media (max-width: 1200px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+            }
+            
+            .phone-container {
+                order: -1;
+                margin-bottom: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>⚡ BOOT ANIMATION CREATOR ⚡</h1>
+        <p class="subtitle">~ Flip Phone Edition ~</p>
+
+        <div class="main-layout">
+            <!-- Left Panel: Upload & Controls -->
+            <div class="control-panel">
+                <h2 class="section-title">🎬 Create Animation</h2>
+                
+                <div class="upload-area" id="uploadArea">
+                    <p style="font-size: 2em; margin-bottom: 10px;">📁</p>
+                    <p>Drop images/video here</p>
+                    <p style="font-size: 0.8em; color: #0ff; margin-top: 10px;">or click to browse</p>
+                    <input type="file" id="fileInput" multiple accept="image/*,video/*">
+                </div>
+
+                <div class="control-group">
+                    <label>⚡ Frame Rate (FPS): <span class="value-display" id="fpsValue">24</span></label>
+                    <input type="range" id="fpsSlider" min="1" max="60" value="24">
+                </div>
+
+                <div class="control-group">
+                    <label>🔄 Loop Count: <span class="value-display" id="loopValue">0 (infinite)</span></label>
+                    <input type="range" id="loopSlider" min="0" max="10" value="0">
+                </div>
+
+                <div class="control-group">
+                    <label>📐 Width (px):</label>
+                    <input type="number" id="widthInput" value="240" min="1" max="1920">
+                </div>
+
+                <div class="control-group">
+                    <label>📐 Height (px):</label>
+                    <input type="number" id="heightInput" value="320" min="1" max="1920">
+                </div>
+
+                <button id="clearBtn">🗑️ Clear All Frames</button>
+                <button id="exportBtn" disabled>💾 Export bootanimation.zip</button>
+            </div>
+
+            <!-- Center: Flip Phone Preview -->
+            <div class="phone-container">
+                <div class="flip-phone">
+                    <div class="phone-top">
+                        <div class="phone-brand">MOTORAZR</div>
+                        <div class="speaker-grille"></div>
+                        <div class="phone-screen">
+                            <div class="screen-content" id="screenContent">
+                                <img class="boot-logo" id="bootLogo" alt="Boot Animation">
+                                <div class="placeholder-text" id="placeholder">
+                                    ⚡ UPLOAD FRAMES ⚡<br><br>
+                                    Drop images or video<br>
+                                    to preview animation
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="phone-hinge"></div>
+                    <div class="phone-bottom">
+                        <div class="phone-keypad">
+                            <div class="key dpad">▲</div>
+                            <div class="key">2<br><small>ABC</small></div>
+                            <div class="key">3<br><small>DEF</small></div>
+                            <div class="key dpad">◄</div>
+                            <div class="key center">OK</div>
+                            <div class="key dpad">►</div>
+                            <div class="key">7<br><small>PQRS</small></div>
+                            <div class="key dpad">▼</div>
+                            <div class="key">9<br><small>WXYZ</small></div>
+                            <div class="key action">CALL</div>
+                            <div class="key">0<br><small>+</small></div>
+                            <div class="key action">END</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Panel: Info & Timeline -->
+            <div class="info-panel">
+                <h2 class="section-title">📊 Animation Info</h2>
+                
+                <div class="info-item">
+                    <span class="info-label">Total Frames:</span>
+                    <span class="info-value" id="frameCount">0</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Duration:</span>
+                    <span class="info-value" id="duration">0.0s</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Current Frame:</span>
+                    <span class="info-value" id="currentFrame">-</span>
+                </div>
+
+                <div class="timeline-container">
+                    <label style="margin-bottom: 10px; display: block;">🎞️ Timeline</label>
+                    <div class="timeline">
+                        <div class="frame-thumbnails" id="frameThumbnails">
+                            <!-- Thumbnails will be added here -->
+                        </div>
+                    </div>
+                    
+                    <div class="playback-controls">
+                        <button id="playBtn" disabled>▶️ Play</button>
+                        <button id="stopBtn" disabled>⏹️ Stop</button>
+                    </div>
+                </div>
+
+                <h2 class="section-title" style="margin-top: 20px;">📝 Frame List</h2>
+                <div class="frame-list" id="frameList">
+                    <p style="text-align: center; color: #666; padding: 20px;">No frames loaded</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script>
+        let frames = [];
+        let currentFrameIndex = 0;
+        let isPlaying = false;
+        let animationInterval = null;
+
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const bootLogo = document.getElementById('bootLogo');
+        const placeholder = document.getElementById('placeholder');
+        const fpsSlider = document.getElementById('fpsSlider');
+        const fpsValue = document.getElementById('fpsValue');
+        const loopSlider = document.getElementById('loopSlider');
+        const loopValue = document.getElementById('loopValue');
+        const frameCount = document.getElementById('frameCount');
+        const duration = document.getElementById('duration');
+        const currentFrame = document.getElementById('currentFrame');
+        const frameThumbnails = document.getElementById('frameThumbnails');
+        const frameList = document.getElementById('frameList');
+        const playBtn = document.getElementById('playBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const exportBtn = document.getElementById('exportBtn');
+
+        // Upload area interactions
+        uploadArea.addEventListener('click', () => fileInput.click());
+        
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragging');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragging');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragging');
+            handleFiles(e.dataTransfer.files);
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            handleFiles(e.target.files);
+        });
+
+        // FPS slider
+        fpsSlider.addEventListener('input', (e) => {
+            fpsValue.textContent = e.target.value;
+            updateDuration();
+            if (isPlaying) {
+                stopAnimation();
+                playAnimation();
+            }
+        });
+
+        // Loop slider
+        loopSlider.addEventListener('input', (e) => {
+            const value = e.target.value;
+            loopValue.textContent = value === '0' ? '0 (infinite)' : value;
+        });
+
+        async function handleFiles(files) {
+            const fileArray = Array.from(files);
+            
+            console.log('Processing', fileArray.length, 'files...');
+            
+            for (const file of fileArray) {
+                console.log('Processing file:', file.name, file.type);
+                
+                if (file.type.startsWith('image/')) {
+                    await addImageFrame(file);
+                } else if (file.type.startsWith('video/')) {
+                    await extractVideoFrames(file);
+                } else {
+                    console.log('Unsupported file type:', file.type);
+                }
+            }
+            
+            console.log('Total frames loaded:', frames.length);
+            updateUI();
+        }
+
+        function addImageFrame(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                
+                reader.onerror = (error) => {
+                    console.error('FileReader error:', error);
+                    reject(error);
+                };
+                
+                reader.onload = (e) => {
+                    const img = new Image();
+                    
+                    img.onerror = (error) => {
+                        console.error('Image load error:', error);
+                        reject(error);
+                    };
+                    
+                    img.onload = () => {
+                        console.log('Loaded image:', file.name, img.width + 'x' + img.height);
+                        
+                        frames.push({
+                            data: e.target.result,
+                            width: img.width,
+                            height: img.height,
+                            name: file.name
+                        });
+                        
+                        resolve();
+                    };
+                    
+                    img.src = e.target.result;
+                };
+                
+                reader.readAsDataURL(file);
+            });
+        }
+
+        async function extractVideoFrames(file) {
+            return new Promise((resolve, reject) => {
+                const video = document.createElement('video');
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                
+                video.preload = 'metadata';
+                video.muted = true;
+                video.playsInline = true;
+                
+                const videoURL = URL.createObjectURL(file);
+                video.src = videoURL;
+                
+                let framesCaptured = 0;
+                
+                video.onerror = (error) => {
+                    console.error('Video load error:', error);
+                    URL.revokeObjectURL(videoURL);
+                    reject(error);
+                };
+                
+                video.addEventListener('loadedmetadata', () => {
+                    console.log('Video loaded:', video.duration + 's', video.videoWidth + 'x' + video.videoHeight);
+                    
+                    canvas.width = video.videoWidth;
+                    canvas.height = video.videoHeight;
+                    
+                    const fps = parseInt(fpsSlider.value);
+                    const interval = 1 / fps;
+                    const totalFrames = Math.floor(video.duration * fps);
+                    
+                    console.log('Extracting', totalFrames, 'frames at', fps, 'FPS...');
+                    
+                    let currentTime = 0;
+                    let seeking = false;
+                    
+                    const captureFrame = () => {
+                        if (currentTime <= video.duration && framesCaptured < totalFrames) {
+                            seeking = true;
+                            video.currentTime = currentTime;
+                        } else {
+                            console.log('Finished extracting', framesCaptured, 'frames');
+                            URL.revokeObjectURL(videoURL);
+                            resolve();
+                        }
+                    };
+                    
+                    video.addEventListener('seeked', () => {
+                        if (!seeking) return;
+                        seeking = false;
+                        
+                        // Draw current video frame to canvas
+                        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                        
+                        // Convert to image data
+                        const frameData = canvas.toDataURL('image/png');
+                        
+                        frames.push({
+                            data: frameData,
+                            width: canvas.width,
+                            height: canvas.height,
+                            name: `frame_${framesCaptured}`
+                        });
+                        
+                        framesCaptured++;
+                        currentTime += interval;
+                        
+                        // Update UI periodically
+                        if (framesCaptured % 5 === 0) {
+                            updateUI();
+                        }
+                        
+                        captureFrame();
+                    });
+                    
+                    captureFrame();
+                }, {once: true});
+                
+                // Timeout after 30 seconds
+                setTimeout(() => {
+                    if (framesCaptured === 0) {
+                        console.error('Video frame extraction timeout');
+                        URL.revokeObjectURL(videoURL);
+                        reject(new Error('Timeout'));
+                    }
+                }, 30000);
+            });
+        }
+
+        function updateUI() {
+            console.log('Updating UI with', frames.length, 'frames');
+            
+            frameCount.textContent = frames.length;
+            updateDuration();
+            
+            if (frames.length > 0) {
+                placeholder.style.display = 'none';
+                bootLogo.classList.add('active');
+                showFrame(0);
+                playBtn.disabled = false;
+                stopBtn.disabled = false;
+                exportBtn.disabled = false;
+                updateTimeline();
+                updateFrameList();
+                console.log('UI updated successfully');
+            } else {
+                placeholder.style.display = 'block';
+                bootLogo.classList.remove('active');
+                playBtn.disabled = true;
+                stopBtn.disabled = true;
+                exportBtn.disabled = true;
+            }
+        }
+
+        function updateDuration() {
+            if (frames.length > 0) {
+                const fps = parseInt(fpsSlider.value);
+                const dur = frames.length / fps;
+                duration.textContent = dur.toFixed(2) + 's';
+            } else {
+                duration.textContent = '0.0s';
+            }
+        }
+
+        function showFrame(index) {
+            if (index >= 0 && index < frames.length) {
+                currentFrameIndex = index;
+                bootLogo.src = frames[index].data;
+                bootLogo.style.display = 'block';
+                currentFrame.textContent = `${index + 1} / ${frames.length}`;
+                
+                console.log('Showing frame', index + 1, 'of', frames.length);
+                
+                // Update active thumbnail
+                document.querySelectorAll('.frame-thumb').forEach((thumb, i) => {
+                    thumb.classList.toggle('active', i === index);
+                });
+            }
+        }
+
+        function updateTimeline() {
+            console.log('Updating timeline with', frames.length, 'thumbnails');
+            frameThumbnails.innerHTML = '';
+            
+            frames.forEach((frame, index) => {
+                const thumb = document.createElement('img');
+                thumb.src = frame.data;
+                thumb.className = 'frame-thumb';
+                thumb.title = `Frame ${index + 1}`;
+                thumb.addEventListener('click', () => {
+                    console.log('Clicked frame', index + 1);
+                    stopAnimation();
+                    showFrame(index);
+                });
+                frameThumbnails.appendChild(thumb);
+            });
+            
+            console.log('Timeline updated');
+        }
+
+        function updateFrameList() {
+            console.log('Updating frame list');
+            frameList.innerHTML = '';
+            
+            if (frames.length === 0) {
+                frameList.innerHTML = '<p style="text-align: center; color: #666; padding: 20px;">No frames loaded</p>';
+                return;
+            }
+            
+            frames.forEach((frame, index) => {
+                const item = document.createElement('div');
+                item.className = 'frame-item';
+                
+                const img = document.createElement('img');
+                img.src = frame.data;
+                img.alt = `Frame ${index + 1}`;
+                
+                const span = document.createElement('span');
+                span.textContent = `Frame ${index + 1} (${frame.width}x${frame.height})`;
+                
+                const deleteBtn = document.createElement('button');
+                deleteBtn.textContent = 'Delete';
+                deleteBtn.onclick = () => deleteFrame(index);
+                
+                item.appendChild(img);
+                item.appendChild(span);
+                item.appendChild(deleteBtn);
+                frameList.appendChild(item);
+            });
+            
+            console.log('Frame list updated');
+        }
+
+        window.deleteFrame = function(index) {
+            console.log('Deleting frame', index + 1);
+            frames.splice(index, 1);
+            
+            if (frames.length === 0) {
+                bootLogo.classList.remove('active');
+                bootLogo.style.display = 'none';
+                placeholder.style.display = 'block';
+                playBtn.disabled = true;
+                stopBtn.disabled = true;
+                exportBtn.disabled = true;
+                currentFrame.textContent = '-';
+                frameThumbnails.innerHTML = '';
+                frameList.innerHTML = '<p style="text-align: center; color: #666; padding: 20px;">No frames loaded</p>';
+                frameCount.textContent = '0';
+                duration.textContent = '0.0s';
+            } else {
+                if (currentFrameIndex >= frames.length) {
+                    currentFrameIndex = frames.length - 1;
+                }
+                showFrame(currentFrameIndex);
+                updateUI();
+            }
+        };
+
+        function playAnimation() {
+            if (frames.length === 0) {
+                console.log('No frames to play');
+                return;
+            }
+            
+            console.log('Starting animation playback');
+            isPlaying = true;
+            playBtn.textContent = '⏸️ Pause';
+            
+            const fps = parseInt(fpsSlider.value);
+            const frameDelay = 1000 / fps;
+            
+            console.log('Playing at', fps, 'FPS (', frameDelay.toFixed(2), 'ms per frame)');
+            
+            animationInterval = setInterval(() => {
+                currentFrameIndex = (currentFrameIndex + 1) % frames.length;
+                showFrame(currentFrameIndex);
+            }, frameDelay);
+        }
+
+        function stopAnimation() {
+            console.log('Stopping animation');
+            isPlaying = false;
+            playBtn.textContent = '▶️ Play';
+            if (animationInterval) {
+                clearInterval(animationInterval);
+                animationInterval = null;
+            }
+        }
+
+        playBtn.addEventListener('click', () => {
+            if (isPlaying) {
+                stopAnimation();
+            } else {
+                playAnimation();
+            }
+        });
+
+        stopBtn.addEventListener('click', () => {
+            stopAnimation();
+            showFrame(0);
+        });
+
+        clearBtn.addEventListener('click', () => {
+            if (frames.length === 0) {
+                console.log('No frames to clear');
+                return;
+            }
+            
+            if (confirm('Clear all ' + frames.length + ' frames?')) {
+                console.log('Clearing all frames');
+                frames = [];
+                currentFrameIndex = 0;
+                stopAnimation();
+                bootLogo.classList.remove('active');
+                bootLogo.style.display = 'none';
+                placeholder.style.display = 'block';
+                playBtn.disabled = true;
+                stopBtn.disabled = true;
+                exportBtn.disabled = true;
+                frameCount.textContent = '0';
+                duration.textContent = '0.0s';
+                currentFrame.textContent = '-';
+                frameThumbnails.innerHTML = '';
+                frameList.innerHTML = '<p style="text-align: center; color: #666; padding: 20px;">No frames loaded</p>';
+                console.log('Frames cleared');
+            }
+        });
+
+        exportBtn.addEventListener('click', async () => {
+            if (frames.length === 0) {
+                alert('No frames to export!');
+                return;
+            }
+            
+            console.log('Starting export...');
+            exportBtn.disabled = true;
+            exportBtn.textContent = '⏳ Exporting...';
+            
+            try {
+                const zip = new JSZip();
+                const part0 = zip.folder('part0');
+                
+                // Create desc.txt
+                const width = document.getElementById('widthInput').value;
+                const height = document.getElementById('heightInput').value;
+                const fps = fpsSlider.value;
+                const loop = loopSlider.value;
+                
+                const descContent = `${width} ${height} ${fps}\np ${loop} 0 part0`;
+                zip.file('desc.txt', descContent);
+                
+                console.log('desc.txt:', descContent);
+                console.log('Adding', frames.length, 'frames to ZIP...');
+                
+                // Add frames
+                for (let i = 0; i < frames.length; i++) {
+                    const frameData = frames[i].data.split(',')[1]; // Remove data:image/png;base64, prefix
+                    const paddedIndex = String(i).padStart(5, '0');
+                    part0.file(`frame${paddedIndex}.png`, frameData, {base64: true});
+                    
+                    if (i % 10 === 0) {
+                        console.log('Added frame', i + 1, 'of', frames.length);
+                    }
+                }
+                
+                console.log('Generating ZIP file...');
+                
+                // Generate and download
+                const content = await zip.generateAsync({
+                    type: 'blob',
+                    compression: 'DEFLATE',
+                    compressionOptions: {
+                        level: 6
+                    }
+                });
+                
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(content);
+                link.download = 'bootanimation.zip';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                console.log('Export complete! File size:', (content.size / 1024 / 1024).toFixed(2), 'MB');
+                
+                exportBtn.textContent = '✅ Exported!';
+                setTimeout(() => {
+                    exportBtn.textContent = '💾 Export bootanimation.zip';
+                    exportBtn.disabled = false;
+                }, 2000);
+                
+            } catch (error) {
+                console.error('Export error:', error);
+                alert('Error creating ZIP file: ' + error.message);
+                exportBtn.textContent = '💾 Export bootanimation.zip';
+                exportBtn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
