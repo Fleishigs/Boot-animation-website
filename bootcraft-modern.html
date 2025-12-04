@@ -1,0 +1,1176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BootCraft - Android Boot Animation Studio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #ec4899;
+            --accent: #8b5cf6;
+            --dark: #0f172a;
+            --dark-alt: #1e293b;
+            --gray: #475569;
+            --light-gray: #94a3b8;
+            --white: #ffffff;
+            --success: #10b981;
+            --warning: #f59e0b;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--dark);
+            color: var(--white);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(236, 72, 153, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(139, 92, 246, 0.1) 0%, transparent 50%);
+            animation: gradientShift 15s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(50px, 50px) scale(1.1); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            max-width: 900px;
+            animation: fadeInUp 1s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logo {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            animation: fadeInUp 1s ease 0.2s both;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            animation: fadeInUp 1s ease 0.3s both;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 50%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--light-gray);
+            margin-bottom: 2.5rem;
+            animation: fadeInUp 1s ease 0.4s both;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeInUp 1s ease 0.5s both;
+        }
+
+        .btn {
+            padding: 1rem 2.5rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-family: 'Outfit', sans-serif;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            color: var(--white);
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(99, 102, 241, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--white);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        /* Features Section */
+        .features {
+            padding: 6rem 2rem;
+            background: var(--dark-alt);
+            position: relative;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 3rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: 0 20px 40px rgba(99, 102, 241, 0.2);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.75rem;
+            font-weight: 700;
+        }
+
+        .feature-card p {
+            color: var(--light-gray);
+            line-height: 1.7;
+        }
+
+        /* Studio Section */
+        .studio {
+            padding: 6rem 2rem;
+            background: var(--dark);
+        }
+
+        .studio-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: none;
+        }
+
+        .studio-container.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .studio-layout {
+            display: grid;
+            grid-template-columns: 350px 1fr 350px;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .panel {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .panel-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Upload Area */
+        .upload-zone {
+            border: 2px dashed rgba(99, 102, 241, 0.5);
+            border-radius: 12px;
+            padding: 3rem 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: rgba(99, 102, 241, 0.05);
+            margin-bottom: 2rem;
+        }
+
+        .upload-zone:hover {
+            border-color: var(--primary);
+            background: rgba(99, 102, 241, 0.1);
+        }
+
+        .upload-zone.dragging {
+            border-color: var(--secondary);
+            background: rgba(236, 72, 153, 0.1);
+            transform: scale(1.02);
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.7;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        /* Control Groups */
+        .control-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .control-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .slider-container {
+            position: relative;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(99, 102, 241, 0.4);
+        }
+
+        .value-display {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: var(--white);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        /* Preview Phone */
+        .preview-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .phone-mockup {
+            width: 280px;
+            background: linear-gradient(145deg, #1e293b, #0f172a);
+            border-radius: 30px;
+            padding: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .phone-screen {
+            width: 100%;
+            height: 500px;
+            background: #000;
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .screen-content {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .boot-animation {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+            display: none;
+        }
+
+        .boot-animation.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .placeholder {
+            text-align: center;
+            color: var(--gray);
+            padding: 2rem;
+        }
+
+        .placeholder-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        /* Timeline */
+        .timeline-controls {
+            width: 100%;
+            margin-top: 1.5rem;
+        }
+
+        .timeline {
+            width: 100%;
+            height: 100px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            overflow-x: auto;
+            overflow-y: hidden;
+            padding: 0.5rem;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .frame-thumb {
+            min-width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            object-fit: cover;
+        }
+
+        .frame-thumb:hover {
+            border-color: var(--primary);
+            transform: scale(1.05);
+        }
+
+        .frame-thumb.active {
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.2);
+        }
+
+        .playback-buttons {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        .playback-buttons .btn {
+            flex: 1;
+            padding: 0.75rem;
+            font-size: 0.95rem;
+        }
+
+        /* Info Panel */
+        .info-grid {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .info-item {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 3px solid var(--primary);
+        }
+
+        .info-label {
+            font-size: 0.85rem;
+            color: var(--light-gray);
+            margin-bottom: 0.25rem;
+        }
+
+        .info-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--primary);
+        }
+
+        /* Frame List */
+        .frame-list {
+            max-height: 400px;
+            overflow-y: auto;
+            margin-top: 1rem;
+        }
+
+        .frame-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.2s ease;
+        }
+
+        .frame-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .frame-item img {
+            width: 50px;
+            height: 50px;
+            border-radius: 6px;
+            object-fit: cover;
+        }
+
+        .frame-info {
+            flex: 1;
+        }
+
+        .frame-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .frame-size {
+            font-size: 0.8rem;
+            color: var(--light-gray);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .btn-delete {
+            padding: 0.5rem 1rem;
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
+        }
+
+        .btn-delete:hover {
+            background: rgba(239, 68, 68, 0.2);
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-dark);
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .studio-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .preview-container {
+                order: -1;
+            }
+
+            h1 {
+                font-size: 2.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+
+        .back-to-home {
+            position: fixed;
+            top: 2rem;
+            left: 2rem;
+            z-index: 100;
+            display: none;
+        }
+
+        .back-to-home.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero" id="heroSection">
+        <div class="hero-content">
+            <div class="logo">BootCraft</div>
+            <h1>Create Stunning <span class="gradient-text">Boot Animations</span> for Android</h1>
+            <p>Professional boot animation studio in your browser. Upload images or videos, customize every detail, and export ready-to-flash ZIP files.</p>
+            <div class="cta-buttons">
+                <button class="btn btn-primary" onclick="showStudio()">Start Creating</button>
+                <a href="#features" class="btn btn-secondary">Learn More</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="container">
+            <h2 class="section-title">Everything You Need</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🎬</div>
+                    <h3>Multi-Format Support</h3>
+                    <p>Upload images (PNG, JPG, GIF) or videos. Automatic frame extraction with customizable FPS.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📱</div>
+                    <h3>Real-Time Preview</h3>
+                    <p>See your animation instantly on a realistic phone mockup. What you see is what you get.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚙️</div>
+                    <h3>Full Control</h3>
+                    <p>Adjust FPS, loop count, resolution, and manage individual frames with precision.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎨</div>
+                    <h3>Timeline Editor</h3>
+                    <p>Scrub through frames, rearrange sequences, and fine-tune timing with visual timeline.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💾</div>
+                    <h3>Export Ready</h3>
+                    <p>Generate properly formatted bootanimation.zip files ready to flash to your device.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Lightning Fast</h3>
+                    <p>All processing happens in your browser. No uploads, no waiting, complete privacy.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Studio Section -->
+    <button class="back-to-home btn btn-secondary" id="backBtn" onclick="hideStudio()">
+        ← Back to Home
+    </button>
+
+    <section class="studio" id="studioSection">
+        <div class="studio-container" id="studioContainer">
+            <h2 class="section-title">Animation Studio</h2>
+            
+            <div class="studio-layout">
+                <!-- Left Panel: Upload & Controls -->
+                <div class="panel">
+                    <h3 class="panel-title">📁 Upload & Settings</h3>
+                    
+                    <div class="upload-zone" id="uploadZone">
+                        <div class="upload-icon">📤</div>
+                        <p><strong>Drop files here</strong></p>
+                        <p style="font-size: 0.9rem; color: var(--light-gray); margin-top: 0.5rem;">or click to browse</p>
+                        <input type="file" id="fileInput" multiple accept="image/*,video/*">
+                    </div>
+
+                    <div class="control-group">
+                        <label>Frame Rate (FPS): <span class="value-display" id="fpsValue">24</span></label>
+                        <input type="range" id="fpsSlider" min="1" max="60" value="24">
+                    </div>
+
+                    <div class="control-group">
+                        <label>Loop Count: <span class="value-display" id="loopValue">∞ infinite</span></label>
+                        <input type="range" id="loopSlider" min="0" max="10" value="0">
+                    </div>
+
+                    <div class="control-group">
+                        <label>Width (px)</label>
+                        <input type="number" id="widthInput" value="480" min="1" max="1920">
+                    </div>
+
+                    <div class="control-group">
+                        <label>Height (px)</label>
+                        <input type="number" id="heightInput" value="800" min="1" max="1920">
+                    </div>
+
+                    <button class="btn btn-primary" style="width: 100%; margin-bottom: 0.75rem;" id="exportBtn" disabled>💾 Export ZIP</button>
+                    <button class="btn btn-secondary" style="width: 100%;" id="clearBtn">🗑️ Clear All</button>
+                </div>
+
+                <!-- Center: Preview -->
+                <div class="preview-container">
+                    <div class="panel" style="width: 100%;">
+                        <h3 class="panel-title">📱 Preview</h3>
+                        <div style="display: flex; justify-content: center;">
+                            <div class="phone-mockup">
+                                <div class="phone-screen">
+                                    <div class="screen-content">
+                                        <img class="boot-animation" id="bootAnimation" alt="Boot Animation">
+                                        <div class="placeholder" id="placeholder">
+                                            <div class="placeholder-icon">📱</div>
+                                            <p>Upload files to preview</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel" style="width: 100%;">
+                        <h3 class="panel-title">🎞️ Timeline</h3>
+                        <div class="timeline" id="timeline">
+                            <!-- Thumbnails will be added here -->
+                        </div>
+                        <div class="playback-buttons">
+                            <button class="btn btn-primary" id="playBtn" disabled>▶️ Play</button>
+                            <button class="btn btn-secondary" id="stopBtn" disabled>⏹️ Stop</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Panel: Info -->
+                <div class="panel">
+                    <h3 class="panel-title">📊 Animation Info</h3>
+                    
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="info-label">Total Frames</div>
+                            <div class="info-value" id="frameCount">0</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Duration</div>
+                            <div class="info-value" id="duration">0.0s</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Current Frame</div>
+                            <div class="info-value" id="currentFrame">-</div>
+                        </div>
+                    </div>
+
+                    <h3 class="panel-title" style="margin-top: 2rem;">📝 Frame List</h3>
+                    <div class="frame-list" id="frameList">
+                        <p style="text-align: center; color: var(--gray); padding: 2rem 1rem;">No frames loaded</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script>
+        // Global state
+        let frames = [];
+        let currentFrameIndex = 0;
+        let isPlaying = false;
+        let animationInterval = null;
+
+        // Elements
+        const heroSection = document.getElementById('heroSection');
+        const studioSection = document.getElementById('studioSection');
+        const studioContainer = document.getElementById('studioContainer');
+        const backBtn = document.getElementById('backBtn');
+        const uploadZone = document.getElementById('uploadZone');
+        const fileInput = document.getElementById('fileInput');
+        const bootAnimation = document.getElementById('bootAnimation');
+        const placeholder = document.getElementById('placeholder');
+        const fpsSlider = document.getElementById('fpsSlider');
+        const fpsValue = document.getElementById('fpsValue');
+        const loopSlider = document.getElementById('loopSlider');
+        const loopValue = document.getElementById('loopValue');
+        const frameCount = document.getElementById('frameCount');
+        const duration = document.getElementById('duration');
+        const currentFrame = document.getElementById('currentFrame');
+        const timeline = document.getElementById('timeline');
+        const frameList = document.getElementById('frameList');
+        const playBtn = document.getElementById('playBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const exportBtn = document.getElementById('exportBtn');
+
+        // Show/Hide Studio
+        function showStudio() {
+            heroSection.style.display = 'none';
+            document.getElementById('features').style.display = 'none';
+            studioContainer.classList.add('active');
+            backBtn.classList.add('active');
+            window.scrollTo(0, 0);
+        }
+
+        function hideStudio() {
+            heroSection.style.display = 'flex';
+            document.getElementById('features').style.display = 'block';
+            studioContainer.classList.remove('active');
+            backBtn.classList.remove('active');
+            window.scrollTo(0, 0);
+        }
+
+        // Upload interactions
+        uploadZone.addEventListener('click', () => fileInput.click());
+        
+        uploadZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadZone.classList.add('dragging');
+        });
+
+        uploadZone.addEventListener('dragleave', () => {
+            uploadZone.classList.remove('dragging');
+        });
+
+        uploadZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadZone.classList.remove('dragging');
+            handleFiles(e.dataTransfer.files);
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            handleFiles(e.target.files);
+        });
+
+        // Slider controls
+        fpsSlider.addEventListener('input', (e) => {
+            fpsValue.textContent = e.target.value;
+            updateDuration();
+            if (isPlaying) {
+                stopAnimation();
+                playAnimation();
+            }
+        });
+
+        loopSlider.addEventListener('input', (e) => {
+            const value = parseInt(e.target.value);
+            loopValue.textContent = value === 0 ? '∞ infinite' : value.toString();
+        });
+
+        // File handling
+        async function handleFiles(files) {
+            const fileArray = Array.from(files);
+            console.log('Processing', fileArray.length, 'files...');
+            
+            for (const file of fileArray) {
+                console.log('Processing:', file.name, file.type);
+                
+                if (file.type.startsWith('image/')) {
+                    await addImageFrame(file);
+                } else if (file.type.startsWith('video/')) {
+                    await extractVideoFrames(file);
+                }
+            }
+            
+            console.log('Total frames:', frames.length);
+            updateUI();
+        }
+
+        function addImageFrame(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                
+                reader.onerror = reject;
+                reader.onload = (e) => {
+                    const img = new Image();
+                    img.onerror = reject;
+                    img.onload = () => {
+                        frames.push({
+                            data: e.target.result,
+                            width: img.width,
+                            height: img.height,
+                            name: file.name
+                        });
+                        console.log('Loaded:', file.name, img.width + 'x' + img.height);
+                        resolve();
+                    };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        async function extractVideoFrames(file) {
+            return new Promise((resolve, reject) => {
+                const video = document.createElement('video');
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                
+                video.preload = 'metadata';
+                video.muted = true;
+                video.playsInline = true;
+                
+                const videoURL = URL.createObjectURL(file);
+                video.src = videoURL;
+                
+                let framesCaptured = 0;
+                video.onerror = reject;
+                
+                video.addEventListener('loadedmetadata', () => {
+                    canvas.width = video.videoWidth;
+                    canvas.height = video.videoHeight;
+                    
+                    const fps = parseInt(fpsSlider.value);
+                    const interval = 1 / fps;
+                    const totalFrames = Math.floor(video.duration * fps);
+                    
+                    console.log('Extracting', totalFrames, 'frames at', fps, 'FPS');
+                    
+                    let currentTime = 0;
+                    let seeking = false;
+                    
+                    video.addEventListener('seeked', () => {
+                        if (!seeking) return;
+                        seeking = false;
+                        
+                        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                        frames.push({
+                            data: canvas.toDataURL('image/png'),
+                            width: canvas.width,
+                            height: canvas.height,
+                            name: `frame_${framesCaptured}`
+                        });
+                        
+                        framesCaptured++;
+                        currentTime += interval;
+                        
+                        if (framesCaptured % 5 === 0) updateUI();
+                        
+                        if (currentTime <= video.duration && framesCaptured < totalFrames) {
+                            seeking = true;
+                            video.currentTime = currentTime;
+                        } else {
+                            URL.revokeObjectURL(videoURL);
+                            resolve();
+                        }
+                    });
+                    
+                    seeking = true;
+                    video.currentTime = currentTime;
+                });
+            });
+        }
+
+        // UI Updates
+        function updateUI() {
+            frameCount.textContent = frames.length;
+            updateDuration();
+            
+            if (frames.length > 0) {
+                placeholder.style.display = 'none';
+                bootAnimation.classList.add('active');
+                showFrame(0);
+                playBtn.disabled = false;
+                stopBtn.disabled = false;
+                exportBtn.disabled = false;
+                updateTimeline();
+                updateFrameList();
+            }
+        }
+
+        function updateDuration() {
+            if (frames.length > 0) {
+                const fps = parseInt(fpsSlider.value);
+                duration.textContent = (frames.length / fps).toFixed(2) + 's';
+            } else {
+                duration.textContent = '0.0s';
+            }
+        }
+
+        function showFrame(index) {
+            if (index >= 0 && index < frames.length) {
+                currentFrameIndex = index;
+                bootAnimation.src = frames[index].data;
+                currentFrame.textContent = `${index + 1}/${frames.length}`;
+                
+                document.querySelectorAll('.frame-thumb').forEach((thumb, i) => {
+                    thumb.classList.toggle('active', i === index);
+                });
+            }
+        }
+
+        function updateTimeline() {
+            timeline.innerHTML = '';
+            frames.forEach((frame, index) => {
+                const thumb = document.createElement('img');
+                thumb.src = frame.data;
+                thumb.className = 'frame-thumb';
+                thumb.onclick = () => {
+                    stopAnimation();
+                    showFrame(index);
+                };
+                timeline.appendChild(thumb);
+            });
+        }
+
+        function updateFrameList() {
+            if (frames.length === 0) {
+                frameList.innerHTML = '<p style="text-align: center; color: var(--gray); padding: 2rem 1rem;">No frames loaded</p>';
+                return;
+            }
+            
+            frameList.innerHTML = '';
+            frames.forEach((frame, index) => {
+                const item = document.createElement('div');
+                item.className = 'frame-item';
+                
+                item.innerHTML = `
+                    <img src="${frame.data}" alt="Frame ${index + 1}">
+                    <div class="frame-info">
+                        <div class="frame-name">Frame ${index + 1}</div>
+                        <div class="frame-size">${frame.width}×${frame.height}</div>
+                    </div>
+                    <button class="btn-delete" onclick="deleteFrame(${index})">Delete</button>
+                `;
+                frameList.appendChild(item);
+            });
+        }
+
+        window.deleteFrame = function(index) {
+            frames.splice(index, 1);
+            if (frames.length === 0) {
+                bootAnimation.classList.remove('active');
+                placeholder.style.display = 'block';
+                playBtn.disabled = true;
+                stopBtn.disabled = true;
+                exportBtn.disabled = true;
+                currentFrame.textContent = '-';
+                timeline.innerHTML = '';
+                frameList.innerHTML = '<p style="text-align: center; color: var(--gray); padding: 2rem 1rem;">No frames loaded</p>';
+                frameCount.textContent = '0';
+                duration.textContent = '0.0s';
+            } else {
+                if (currentFrameIndex >= frames.length) currentFrameIndex = frames.length - 1;
+                showFrame(currentFrameIndex);
+                updateUI();
+            }
+        };
+
+        // Playback
+        function playAnimation() {
+            if (frames.length === 0) return;
+            
+            isPlaying = true;
+            playBtn.textContent = '⏸️ Pause';
+            
+            const fps = parseInt(fpsSlider.value);
+            const frameDelay = 1000 / fps;
+            
+            animationInterval = setInterval(() => {
+                currentFrameIndex = (currentFrameIndex + 1) % frames.length;
+                showFrame(currentFrameIndex);
+            }, frameDelay);
+        }
+
+        function stopAnimation() {
+            isPlaying = false;
+            playBtn.textContent = '▶️ Play';
+            if (animationInterval) {
+                clearInterval(animationInterval);
+                animationInterval = null;
+            }
+        }
+
+        playBtn.addEventListener('click', () => {
+            if (isPlaying) stopAnimation();
+            else playAnimation();
+        });
+
+        stopBtn.addEventListener('click', () => {
+            stopAnimation();
+            showFrame(0);
+        });
+
+        clearBtn.addEventListener('click', () => {
+            if (frames.length === 0) return;
+            if (!confirm(`Clear all ${frames.length} frames?`)) return;
+            
+            frames = [];
+            currentFrameIndex = 0;
+            stopAnimation();
+            bootAnimation.classList.remove('active');
+            placeholder.style.display = 'block';
+            playBtn.disabled = true;
+            stopBtn.disabled = true;
+            exportBtn.disabled = true;
+            frameCount.textContent = '0';
+            duration.textContent = '0.0s';
+            currentFrame.textContent = '-';
+            timeline.innerHTML = '';
+            frameList.innerHTML = '<p style="text-align: center; color: var(--gray); padding: 2rem 1rem;">No frames loaded</p>';
+        });
+
+        // Export
+        exportBtn.addEventListener('click', async () => {
+            if (frames.length === 0) return;
+            
+            exportBtn.disabled = true;
+            exportBtn.textContent = '⏳ Creating ZIP...';
+            
+            try {
+                const zip = new JSZip();
+                const part0 = zip.folder('part0');
+                
+                const width = document.getElementById('widthInput').value;
+                const height = document.getElementById('heightInput').value;
+                const fps = fpsSlider.value;
+                const loop = loopSlider.value;
+                
+                zip.file('desc.txt', `${width} ${height} ${fps}\np ${loop} 0 part0`);
+                
+                for (let i = 0; i < frames.length; i++) {
+                    const frameData = frames[i].data.split(',')[1];
+                    part0.file(`frame${String(i).padStart(5, '0')}.png`, frameData, {base64: true});
+                }
+                
+                const content = await zip.generateAsync({
+                    type: 'blob',
+                    compression: 'DEFLATE',
+                    compressionOptions: { level: 6 }
+                });
+                
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(content);
+                link.download = 'bootanimation.zip';
+                link.click();
+                
+                exportBtn.textContent = '✅ Downloaded!';
+                setTimeout(() => {
+                    exportBtn.textContent = '💾 Export ZIP';
+                    exportBtn.disabled = false;
+                }, 2000);
+            } catch (error) {
+                console.error(error);
+                alert('Export failed: ' + error.message);
+                exportBtn.textContent = '💾 Export ZIP';
+                exportBtn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
