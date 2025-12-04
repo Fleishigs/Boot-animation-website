@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /examples/
+
+Sitemap: https://bootanimation.netlify.app/sitemap.xml
+
+# Boot Animation Creator - BootCraft
+# Free online Android boot animation maker
+# Keywords: boot animation creator, boot animator, bootcraft, boot factory

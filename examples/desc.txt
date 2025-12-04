@@ -1,0 +1,25 @@
+# Boot Animation Descriptor File Format
+# This file goes in the root of bootanimation.zip
+
+# Format: [width] [height] [fps]
+240 320 24
+
+# Format: [type] [loop_count] [pause_frames] [folder_name]
+# type: 'p' for part (standard animation sequence)
+# loop_count: 0 = infinite, or specific number of loops
+# pause_frames: frames to pause after loop (usually 0)
+# folder_name: directory containing the frames
+
+p 0 0 part0
+
+# Example with multiple parts:
+# 240 320 24
+# p 1 0 part0    # Play part0 once
+# p 0 0 part1    # Loop part1 infinitely
+
+# Common resolutions:
+# 240x320  - Small phones
+# 480x800  - Mid-range phones  
+# 720x1280 - HD phones
+# 1080x1920 - Full HD phones
+# 1440x2560 - QHD phones
