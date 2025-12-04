@@ -718,6 +718,249 @@
         .back-to-home.active {
             display: block;
         }
+
+        /* Video Trimmer Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .trimmer-modal {
+            background: var(--dark-alt);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+            max-width: 900px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .modal-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .close-modal {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            color: var(--white);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close-modal:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: rotate(90deg);
+        }
+
+        .video-player-container {
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .video-player {
+            width: 100%;
+            display: block;
+            max-height: 500px;
+        }
+
+        .video-controls {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 1rem;
+        }
+
+        .playback-control {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .play-pause-btn {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            border: none;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            color: var(--white);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .play-pause-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(99, 102, 241, 0.4);
+        }
+
+        .time-display {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--light-gray);
+            min-width: 120px;
+        }
+
+        .trim-timeline {
+            position: relative;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+        }
+
+        .timeline-track {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .timeline-progress {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            background: rgba(99, 102, 241, 0.3);
+            pointer-events: none;
+        }
+
+        .trim-handle {
+            position: absolute;
+            top: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--primary);
+            cursor: ew-resize;
+            z-index: 2;
+        }
+
+        .trim-handle::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 40px;
+            background: var(--primary);
+            border-radius: 4px;
+            box-shadow: 0 2px 8px rgba(99, 102, 241, 0.5);
+        }
+
+        .trim-handle.start {
+            left: 0;
+        }
+
+        .trim-handle.end {
+            right: 0;
+            left: auto;
+        }
+
+        .trim-range {
+            position: absolute;
+            top: 0;
+            height: 100%;
+            background: rgba(99, 102, 241, 0.2);
+            border-left: 3px solid var(--primary);
+            border-right: 3px solid var(--primary);
+            pointer-events: none;
+        }
+
+        .playhead {
+            position: absolute;
+            top: 0;
+            width: 2px;
+            height: 100%;
+            background: var(--secondary);
+            pointer-events: none;
+            z-index: 3;
+        }
+
+        .playhead::before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 12px;
+            height: 12px;
+            background: var(--secondary);
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(236, 72, 153, 0.8);
+        }
+
+        .trim-info {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .trim-info-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .trim-info-label {
+            font-size: 0.85rem;
+            color: var(--light-gray);
+            margin-bottom: 0.5rem;
+        }
+
+        .trim-info-value {
+            font-size: 1.3rem;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--primary);
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .modal-actions .btn {
+            flex: 1;
+        }
     </style>
 </head>
 <body>
@@ -795,8 +1038,8 @@
                     </div>
 
                     <div class="control-group">
-                        <label>Frame Rate (FPS): <span class="value-display" id="fpsValue">24</span></label>
-                        <input type="range" id="fpsSlider" min="1" max="60" value="24">
+                        <label>Frame Rate (FPS): <span class="value-display" id="fpsValue">30</span></label>
+                        <input type="range" id="fpsSlider" min="1" max="60" value="30">
                     </div>
 
                     <div class="control-group">
@@ -877,6 +1120,56 @@
         </div>
     </section>
 
+    <!-- Video Trimmer Modal -->
+    <div class="modal-overlay" id="trimmerModal">
+        <div class="trimmer-modal">
+            <div class="modal-header">
+                <h2 class="modal-title">✂️ Trim Video</h2>
+                <button class="close-modal" onclick="closeTrimmer()">×</button>
+            </div>
+
+            <div class="video-player-container">
+                <video class="video-player" id="trimVideo" preload="auto"></video>
+                <div class="video-controls">
+                    <div class="playback-control">
+                        <button class="play-pause-btn" id="playPauseBtn">▶️</button>
+                        <span class="time-display" id="timeDisplay">0:00 / 0:00</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="trim-timeline" id="trimTimeline">
+                <div class="timeline-track">
+                    <div class="timeline-progress" id="timelineProgress"></div>
+                    <div class="trim-range" id="trimRange"></div>
+                    <div class="trim-handle start" id="startHandle"></div>
+                    <div class="trim-handle end" id="endHandle"></div>
+                    <div class="playhead" id="playhead"></div>
+                </div>
+            </div>
+
+            <div class="trim-info">
+                <div class="trim-info-item">
+                    <div class="trim-info-label">Start Time</div>
+                    <div class="trim-info-value" id="startTime">0:00</div>
+                </div>
+                <div class="trim-info-item">
+                    <div class="trim-info-label">End Time</div>
+                    <div class="trim-info-value" id="endTime">0:00</div>
+                </div>
+                <div class="trim-info-item">
+                    <div class="trim-info-label">Duration</div>
+                    <div class="trim-info-value" id="trimDuration">0:00</div>
+                </div>
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="closeTrimmer()">Cancel</button>
+                <button class="btn btn-primary" onclick="applyTrim()">✂️ Extract Frames</button>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script>
         // Global state
@@ -884,6 +1177,11 @@
         let currentFrameIndex = 0;
         let isPlaying = false;
         let animationInterval = null;
+        let currentVideoFile = null;
+        let trimStart = 0;
+        let trimEnd = 0;
+        let isDraggingStart = false;
+        let isDraggingEnd = false;
 
         // Elements
         const heroSection = document.getElementById('heroSection');
@@ -973,7 +1271,10 @@
                 if (file.type.startsWith('image/')) {
                     await addImageFrame(file);
                 } else if (file.type.startsWith('video/')) {
-                    await extractVideoFrames(file);
+                    // Show trimmer modal for videos
+                    currentVideoFile = file;
+                    showTrimmer(file);
+                    return; // Only handle one video at a time
                 }
             }
             
@@ -1005,7 +1306,7 @@
             });
         }
 
-        async function extractVideoFrames(file) {
+        async function extractVideoFrames(file, startTime = 0, endTime = null) {
             return new Promise((resolve, reject) => {
                 const video = document.createElement('video');
                 const canvas = document.createElement('canvas');
@@ -1027,11 +1328,13 @@
                     
                     const fps = parseInt(fpsSlider.value);
                     const interval = 1 / fps;
-                    const totalFrames = Math.floor(video.duration * fps);
+                    const actualEndTime = endTime || video.duration;
+                    const duration = actualEndTime - startTime;
+                    const totalFrames = Math.floor(duration * fps);
                     
-                    console.log('Extracting', totalFrames, 'frames at', fps, 'FPS');
+                    console.log('Extracting', totalFrames, 'frames from', startTime.toFixed(2), 'to', actualEndTime.toFixed(2), 'at', fps, 'FPS');
                     
-                    let currentTime = 0;
+                    let currentTime = startTime;
                     let seeking = false;
                     
                     video.addEventListener('seeked', () => {
@@ -1051,11 +1354,12 @@
                         
                         if (framesCaptured % 5 === 0) updateUI();
                         
-                        if (currentTime <= video.duration && framesCaptured < totalFrames) {
+                        if (currentTime <= actualEndTime && framesCaptured < totalFrames) {
                             seeking = true;
                             video.currentTime = currentTime;
                         } else {
                             URL.revokeObjectURL(videoURL);
+                            console.log('Extraction complete:', framesCaptured, 'frames');
                             resolve();
                         }
                     });
@@ -1261,6 +1565,167 @@
                 exportBtn.disabled = false;
             }
         });
+
+        // Video Trimmer Functions
+        function showTrimmer(videoFile) {
+            const modal = document.getElementById('trimmerModal');
+            const video = document.getElementById('trimVideo');
+            const playPauseBtn = document.getElementById('playPauseBtn');
+            
+            video.src = URL.createObjectURL(videoFile);
+            modal.classList.add('active');
+            
+            video.addEventListener('loadedmetadata', () => {
+                trimStart = 0;
+                trimEnd = video.duration;
+                updateTrimUI();
+                
+                // Set up timeline click
+                const timeline = document.getElementById('trimTimeline');
+                timeline.addEventListener('click', (e) => {
+                    if (e.target === timeline || e.target.classList.contains('timeline-track')) {
+                        const rect = timeline.getBoundingClientRect();
+                        const percent = (e.clientX - rect.left) / rect.width;
+                        video.currentTime = percent * video.duration;
+                    }
+                });
+            });
+            
+            // Play/Pause
+            playPauseBtn.onclick = () => {
+                if (video.paused) {
+                    video.play();
+                    playPauseBtn.textContent = '⏸️';
+                } else {
+                    video.pause();
+                    playPauseBtn.textContent = '▶️';
+                }
+            };
+            
+            // Update playhead
+            video.addEventListener('timeupdate', () => {
+                updatePlayhead();
+                updateTimeDisplay();
+                
+                // Loop within trim range
+                if (video.currentTime >= trimEnd) {
+                    video.currentTime = trimStart;
+                }
+            });
+            
+            // Handle dragging
+            setupTrimHandles();
+        }
+
+        function setupTrimHandles() {
+            const startHandle = document.getElementById('startHandle');
+            const endHandle = document.getElementById('endHandle');
+            const timeline = document.getElementById('trimTimeline');
+            const video = document.getElementById('trimVideo');
+            
+            startHandle.addEventListener('mousedown', (e) => {
+                e.preventDefault();
+                isDraggingStart = true;
+            });
+            
+            endHandle.addEventListener('mousedown', (e) => {
+                e.preventDefault();
+                isDraggingEnd = true;
+            });
+            
+            document.addEventListener('mousemove', (e) => {
+                if (!isDraggingStart && !isDraggingEnd) return;
+                
+                const rect = timeline.getBoundingClientRect();
+                const percent = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+                const time = percent * video.duration;
+                
+                if (isDraggingStart) {
+                    trimStart = Math.min(time, trimEnd - 0.1);
+                    video.currentTime = trimStart;
+                } else if (isDraggingEnd) {
+                    trimEnd = Math.max(time, trimStart + 0.1);
+                }
+                
+                updateTrimUI();
+            });
+            
+            document.addEventListener('mouseup', () => {
+                isDraggingStart = false;
+                isDraggingEnd = false;
+            });
+        }
+
+        function updateTrimUI() {
+            const video = document.getElementById('trimVideo');
+            const startHandle = document.getElementById('startHandle');
+            const endHandle = document.getElementById('endHandle');
+            const trimRange = document.getElementById('trimRange');
+            
+            const startPercent = (trimStart / video.duration) * 100;
+            const endPercent = (trimEnd / video.duration) * 100;
+            
+            startHandle.style.left = startPercent + '%';
+            endHandle.style.left = endPercent + '%';
+            trimRange.style.left = startPercent + '%';
+            trimRange.style.width = (endPercent - startPercent) + '%';
+            
+            // Update info displays
+            document.getElementById('startTime').textContent = formatTime(trimStart);
+            document.getElementById('endTime').textContent = formatTime(trimEnd);
+            document.getElementById('trimDuration').textContent = formatTime(trimEnd - trimStart);
+        }
+
+        function updatePlayhead() {
+            const video = document.getElementById('trimVideo');
+            const playhead = document.getElementById('playhead');
+            const percent = (video.currentTime / video.duration) * 100;
+            playhead.style.left = percent + '%';
+        }
+
+        function updateTimeDisplay() {
+            const video = document.getElementById('trimVideo');
+            const timeDisplay = document.getElementById('timeDisplay');
+            timeDisplay.textContent = formatTime(video.currentTime) + ' / ' + formatTime(video.duration);
+        }
+
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return mins + ':' + (secs < 10 ? '0' : '') + secs;
+        }
+
+        function closeTrimmer() {
+            const modal = document.getElementById('trimmerModal');
+            const video = document.getElementById('trimVideo');
+            
+            video.pause();
+            video.src = '';
+            modal.classList.remove('active');
+            currentVideoFile = null;
+        }
+
+        async function applyTrim() {
+            if (!currentVideoFile) return;
+            
+            const modal = document.getElementById('trimmerModal');
+            const video = document.getElementById('trimVideo');
+            
+            // Close modal
+            video.pause();
+            modal.classList.remove('active');
+            
+            // Extract frames from trimmed section
+            console.log('Extracting frames from', trimStart, 'to', trimEnd);
+            await extractVideoFrames(currentVideoFile, trimStart, trimEnd);
+            
+            // Clean up
+            video.src = '';
+            currentVideoFile = null;
+            
+            // Update UI
+            updateUI();
+        }
     </script>
 </body>
 </html>
