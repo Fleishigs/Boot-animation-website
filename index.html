@@ -1649,12 +1649,22 @@
                 const fps = fpsSlider.value;
                 const loop = loopSlider.value;
                 
-                zip.file('desc.txt', `${width} ${height} ${fps}\np ${loop} 0 part0`);
+                // Create desc.txt with proper format (no trailing newline!)
+                const descContent = `${width} ${height} ${fps}\np ${loop} 0 part0`;
+                zip.file('desc.txt', descContent);
                 
+                // Add frames with correct naming: 00000.png, 00001.png (NO "frame" prefix!)
                 for (let i = 0; i < frames.length; i++) {
                     const frameData = frames[i].data.split(',')[1];
-                    part0.file(`frame${String(i).padStart(5, '0')}.png`, frameData, {base64: true});
+                    const frameName = String(i).padStart(5, '0') + '.png';  // Just numbers: 00000.png
+                    part0.file(frameName, frameData, {base64: true});
                 }
+                
+                console.log(`Creating bootanimation.zip with ${frames.length} frames`);
+                console.log(`desc.txt: ${descContent}`);
+                console.log(`Resolution: ${width}x${height}`);
+                console.log(`FPS: ${fps}`);
+                console.log(`Loop: ${loop === '0' ? 'infinite' : loop}`);
                 
                 const content = await zip.generateAsync({
                     type: 'blob',
@@ -1664,16 +1674,42 @@
                     }
                 });
                 
+                console.log(`ZIP size: ${(content.size / 1024).toFixed(2)} KB`);
+                console.log(`Compression: STORE (uncompressed) ✓`);
+                console.log(`File structure:`);
+                console.log(`  bootanimation.zip`);
+                console.log(`  ├── desc.txt`);
+                console.log(`  └── part0/`);
+                for (let i = 0; i < Math.min(3, frames.length); i++) {
+                    console.log(`      ├── ${String(i).padStart(5, '0')}.png`);
+                }
+                if (frames.length > 3) {
+                    console.log(`      └── ... (${frames.length - 3} more frames)`);
+                }
+                
                 const link = document.createElement('a');
                 link.href = URL.createObjectURL(content);
                 link.download = 'bootanimation.zip';
                 link.click();
                 
+                console.log('✅ bootanimation.zip downloaded successfully!');
+                console.log('\n📱 TO INSTALL ON YOUR DEVICE:');
+                console.log('Via ADB (requires root):');
+                console.log('  adb root');
+                console.log('  adb remount');
+                console.log('  adb push bootanimation.zip /system/media/');
+                console.log('  adb shell chmod 644 /system/media/bootanimation.zip');
+                console.log('  adb reboot');
+                console.log('\nVia TWRP:');
+                console.log('  1. Copy to /system/media/ or /data/local/');
+                console.log('  2. Set permissions to 644 (rw-r--r--)');
+                console.log('  3. Reboot');
+                
                 exportBtn.textContent = '✅ Downloaded!';
                 setTimeout(() => {
                     exportBtn.textContent = '💾 Export ZIP';
                     exportBtn.disabled = false;
-                }, 2000);
+                }, 3000);
             } catch (error) {
                 console.error(error);
                 alert('Export failed: ' + error.message);
