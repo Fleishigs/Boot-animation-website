@@ -1658,8 +1658,10 @@
                 
                 const content = await zip.generateAsync({
                     type: 'blob',
-                    compression: 'DEFLATE',
-                    compressionOptions: { level: 6 }
+                    compression: 'STORE',  // CRITICAL: Android requires NO compression!
+                    compressionOptions: {
+                        level: 0  // No compression
+                    }
                 });
                 
                 const link = document.createElement('a');
