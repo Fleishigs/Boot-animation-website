@@ -218,9 +218,14 @@
             box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
         }
 
-        .btn-primary:hover {
+        .btn-primary:hover:not(:disabled) {
             transform: translateY(-2px);
             box-shadow: 0 15px 40px rgba(99, 102, 241, 0.4);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
         }
 
         .btn-secondary {
@@ -1075,6 +1080,41 @@
         .modal-actions .btn {
             flex: 1;
         }
+
+        /* Progress indicator in modal */
+        .extraction-progress {
+            display: none;
+            text-align: center;
+            padding: 1rem;
+            background: rgba(99, 102, 241, 0.1);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .extraction-progress.active {
+            display: block;
+        }
+
+        .progress-text {
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 100%);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
     </style>
 </head>
 <body>
@@ -1277,9 +1317,17 @@
                 </div>
             </div>
 
+            <!-- Progress indicator -->
+            <div class="extraction-progress" id="extractionProgress">
+                <div class="progress-text" id="progressText">Extracting frames...</div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+            </div>
+
             <div class="modal-actions">
                 <button class="btn btn-secondary" onclick="closeTrimmer()">Cancel</button>
-                <button class="btn btn-primary" onclick="applyTrim()">✂️ Extract Frames</button>
+                <button class="btn btn-primary" id="extractFramesBtn" onclick="applyTrim()">✂️ Extract Frames</button>
             </div>
         </div>
     </div>
@@ -1466,7 +1514,9 @@
                         framesCaptured++;
                         currentTime += interval;
                         
-                        if (framesCaptured % 5 === 0) updateUI();
+                        // Update progress
+                        const progress = (framesCaptured / totalFrames) * 100;
+                        updateExtractionProgress(progress, framesCaptured, totalFrames);
                         
                         if (currentTime <= actualEndTime && framesCaptured < totalFrames) {
                             seeking = true;
@@ -1723,6 +1773,14 @@
             const modal = document.getElementById('trimmerModal');
             const video = document.getElementById('trimVideo');
             const playPauseBtn = document.getElementById('playPauseBtn');
+            const extractBtn = document.getElementById('extractFramesBtn');
+            
+            // Reset button state
+            extractBtn.disabled = false;
+            extractBtn.textContent = '✂️ Extract Frames';
+            
+            // Hide progress indicator
+            document.getElementById('extractionProgress').classList.remove('active');
             
             video.src = URL.createObjectURL(videoFile);
             modal.classList.add('active');
@@ -1887,14 +1945,31 @@
             return mins + ':' + (secs < 10 ? '0' : '') + secs;
         }
 
+        function updateExtractionProgress(percent, current, total) {
+            const progressBar = document.getElementById('progressBar');
+            const progressText = document.getElementById('progressText');
+            
+            progressBar.style.width = percent + '%';
+            progressText.textContent = `Extracting frames... ${current}/${total} (${Math.round(percent)}%)`;
+        }
+
         function closeTrimmer() {
             const modal = document.getElementById('trimmerModal');
             const video = document.getElementById('trimVideo');
+            const extractBtn = document.getElementById('extractFramesBtn');
+            
+            // Only allow closing if not extracting
+            if (extractBtn.disabled && extractBtn.textContent.includes('Extracting')) {
+                return; // Don't close while extracting
+            }
             
             video.pause();
             video.src = '';
             modal.classList.remove('active');
             currentVideoFile = null;
+            
+            // Hide progress
+            document.getElementById('extractionProgress').classList.remove('active');
         }
 
         async function applyTrim() {
@@ -1902,21 +1977,48 @@
             
             const modal = document.getElementById('trimmerModal');
             const video = document.getElementById('trimVideo');
+            const extractBtn = document.getElementById('extractFramesBtn');
+            const progressDiv = document.getElementById('extractionProgress');
+            const cancelBtn = modal.querySelector('.btn-secondary');
             
-            // Close modal
+            // Disable buttons and show loading
+            extractBtn.disabled = true;
+            cancelBtn.disabled = true;
+            extractBtn.textContent = '⏳ Extracting...';
             video.pause();
-            modal.classList.remove('active');
             
-            // Extract frames from trimmed section
-            console.log('Extracting frames from', trimStart, 'to', trimEnd);
-            await extractVideoFrames(currentVideoFile, trimStart, trimEnd);
+            // Show progress indicator
+            progressDiv.classList.add('active');
+            updateExtractionProgress(0, 0, 0);
             
-            // Clean up
-            video.src = '';
-            currentVideoFile = null;
-            
-            // Update UI
-            updateUI();
+            try {
+                // Extract frames from trimmed section
+                console.log('Extracting frames from', trimStart, 'to', trimEnd);
+                await extractVideoFrames(currentVideoFile, trimStart, trimEnd);
+                
+                // Update UI with extracted frames
+                updateUI();
+                
+                // Show success message briefly
+                extractBtn.textContent = '✅ Complete!';
+                await new Promise(resolve => setTimeout(resolve, 800));
+                
+                // Close modal after frames are ready
+                video.src = '';
+                modal.classList.remove('active');
+                currentVideoFile = null;
+                progressDiv.classList.remove('active');
+                
+            } catch (error) {
+                console.error('Frame extraction failed:', error);
+                alert('Failed to extract frames: ' + error.message);
+                
+                // Re-enable buttons on error
+                extractBtn.disabled = false;
+                cancelBtn.disabled = false;
+                extractBtn.textContent = '✂️ Extract Frames';
+                progressDiv.classList.remove('active');
+            }
         }
     </script>
 </body>
