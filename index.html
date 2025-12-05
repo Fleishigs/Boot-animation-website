@@ -1192,8 +1192,9 @@
                     </div>
 
                     <div class="control-group">
-                        <label>Frame Rate (FPS): <span class="value-display" id="fpsValue">30</span></label>
-                        <input type="range" id="fpsSlider" min="1" max="60" value="30">
+                        <label>Frame Rate (FPS): <span class="value-display" id="fpsValue">12</span></label>
+                        <input type="range" id="fpsSlider" min="1" max="30" value="12">
+                        <p style="font-size: 0.8rem; color: var(--light-gray); margin-top: 0.5rem;">⚠️ Boot animations typically use 10-15 FPS (not 30+)</p>
                     </div>
 
                     <div class="control-group">
@@ -1208,7 +1209,7 @@
 
                     <div class="control-group">
                         <label>Height (px)</label>
-                        <input type="number" id="heightInput" value="800" min="1" max="1920">
+                        <input type="number" id="heightInput" value="640" min="1" max="1920">
                     </div>
 
                     <button class="btn btn-primary" style="width: 100%; margin-bottom: 0.75rem;" id="exportBtn" disabled>💾 Export ZIP</button>
@@ -1260,8 +1261,8 @@
                             <div class="info-value" id="duration">0.0s</div>
                         </div>
                         <div class="info-item">
-                            <div class="info-label">Current Frame</div>
-                            <div class="info-value" id="currentFrame">-</div>
+                            <div class="info-label">Est. File Size</div>
+                            <div class="info-value" id="estimatedSize">~0 MB</div>
                         </div>
                     </div>
 
@@ -1360,7 +1361,7 @@
         const loopValue = document.getElementById('loopValue');
         const frameCount = document.getElementById('frameCount');
         const duration = document.getElementById('duration');
-        const currentFrame = document.getElementById('currentFrame');
+        const estimatedSize = document.getElementById('estimatedSize');
         const timeline = document.getElementById('timeline');
         const frameList = document.getElementById('frameList');
         const playBtn = document.getElementById('playBtn');
@@ -1409,8 +1410,18 @@
 
         // Slider controls
         fpsSlider.addEventListener('input', (e) => {
-            fpsValue.textContent = e.target.value;
+            const fpsVal = e.target.value;
+            fpsValue.textContent = fpsVal;
+            
+            // Warning for high FPS
+            if (parseInt(fpsVal) > 15) {
+                fpsValue.style.color = 'var(--warning)';
+            } else {
+                fpsValue.style.color = 'var(--primary)';
+            }
+            
             updateDuration();
+            updateEstimatedSize();
             if (isPlaying) {
                 stopAnimation();
                 playAnimation();
@@ -1538,6 +1549,7 @@
         function updateUI() {
             frameCount.textContent = frames.length;
             updateDuration();
+            updateEstimatedSize();
             
             if (frames.length > 0) {
                 placeholder.style.display = 'none';
@@ -1560,11 +1572,34 @@
             }
         }
 
+        function updateEstimatedSize() {
+            if (frames.length === 0) {
+                estimatedSize.textContent = '~0 MB';
+                estimatedSize.style.color = 'var(--primary)';
+                return;
+            }
+            
+            // Rough estimate: PNG base64 is about 130-150KB per frame on average for typical resolutions
+            const avgFrameSize = 140 * 1024; // 140 KB per frame estimate
+            const estimatedBytes = frames.length * avgFrameSize;
+            const estimatedMB = estimatedBytes / (1024 * 1024);
+            
+            estimatedSize.textContent = '~' + estimatedMB.toFixed(1) + ' MB';
+            
+            // Color code based on size
+            if (estimatedMB > 10) {
+                estimatedSize.style.color = '#ef4444'; // red - too large
+            } else if (estimatedMB > 5) {
+                estimatedSize.style.color = 'var(--warning)'; // orange - large
+            } else {
+                estimatedSize.style.color = 'var(--success)'; // green - good
+            }
+        }
+
         function showFrame(index) {
             if (index >= 0 && index < frames.length) {
                 currentFrameIndex = index;
                 bootAnimation.src = frames[index].data;
-                currentFrame.textContent = `${index + 1}/${frames.length}`;
                 
                 document.querySelectorAll('.frame-thumb').forEach((thumb, i) => {
                     thumb.classList.toggle('active', i === index);
@@ -1617,11 +1652,12 @@
                 playBtn.disabled = true;
                 stopBtn.disabled = true;
                 exportBtn.disabled = true;
-                currentFrame.textContent = '-';
                 timeline.innerHTML = '';
                 frameList.innerHTML = '<p style="text-align: center; color: var(--gray); padding: 2rem 1rem;">No frames loaded</p>';
                 frameCount.textContent = '0';
                 duration.textContent = '0.0s';
+                estimatedSize.textContent = '~0 MB';
+                estimatedSize.style.color = 'var(--primary)';
             } else {
                 if (currentFrameIndex >= frames.length) currentFrameIndex = frames.length - 1;
                 showFrame(currentFrameIndex);
@@ -1678,7 +1714,8 @@
             exportBtn.disabled = true;
             frameCount.textContent = '0';
             duration.textContent = '0.0s';
-            currentFrame.textContent = '-';
+            estimatedSize.textContent = '~0 MB';
+            estimatedSize.style.color = 'var(--primary)';
             timeline.innerHTML = '';
             frameList.innerHTML = '<p style="text-align: center; color: var(--gray); padding: 2rem 1rem;">No frames loaded</p>';
         });
@@ -1686,6 +1723,19 @@
         // Export
         exportBtn.addEventListener('click', async () => {
             if (frames.length === 0) return;
+            
+            // Check for excessive frame count
+            if (frames.length > 150) {
+                const proceed = confirm(
+                    `⚠️ WARNING: ${frames.length} frames will create a LARGE file!\n\n` +
+                    `Boot animations should typically have 60-120 frames max.\n` +
+                    `Consider:\n` +
+                    `- Lowering FPS (try 10-12)\n` +
+                    `- Trimming video shorter\n\n` +
+                    `Continue anyway?`
+                );
+                if (!proceed) return;
+            }
             
             exportBtn.disabled = true;
             exportBtn.textContent = '⏳ Creating ZIP...';
@@ -1743,6 +1793,29 @@
                 link.click();
                 
                 console.log('✅ bootanimation.zip downloaded successfully!');
+                console.log('\n📊 BOOT ANIMATION STATS:');
+                console.log(`  Frames: ${frames.length}`);
+                console.log(`  FPS: ${fps}`);
+                console.log(`  Duration: ${(frames.length / fps).toFixed(2)}s`);
+                console.log(`  ZIP Size: ${(content.size / 1024).toFixed(2)} KB (${(content.size / 1024 / 1024).toFixed(2)} MB)`);
+                
+                // Warnings
+                if (frames.length > 120) {
+                    console.warn(`⚠️ WARNING: ${frames.length} frames is HIGH for boot animation!`);
+                    console.warn(`   Recommended: 60-120 frames max`);
+                    console.warn(`   Solution: Lower FPS or trim video shorter`);
+                }
+                if (content.size > 10 * 1024 * 1024) {
+                    console.warn(`⚠️ WARNING: ${(content.size / 1024 / 1024).toFixed(2)} MB is TOO LARGE!`);
+                    console.warn(`   Recommended: Under 10 MB`);
+                    console.warn(`   Solution: Lower resolution, fewer frames, or shorter video`);
+                }
+                if (parseInt(fps) > 15) {
+                    console.warn(`⚠️ WARNING: ${fps} FPS is too high for boot!`);
+                    console.warn(`   Recommended: 10-12 FPS`);
+                    console.warn(`   Boot has limited resources - high FPS may cause lag/freezing`);
+                }
+                
                 console.log('\n📱 TO INSTALL ON YOUR DEVICE:');
                 console.log('Via ADB (requires root):');
                 console.log('  adb root');
