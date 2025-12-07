@@ -3,422 +3,432 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BootCraft - Android Boot Animation Creator (FIXED)</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <title>BootCraft - Android Boot Animation Creator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
         
-        :root {
-            --primary: #6366f1;
-            --primary-dark: #4f46e5;
-            --secondary: #ec4899;
-            --accent: #8b5cf6;
-            --dark: #0f172a;
-            --dark-alt: #1e293b;
-            --gray: #475569;
-            --light-gray: #94a3b8;
-            --white: #ffffff;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --error: #ef4444;
-        }
-
         body {
-            font-family: 'Outfit', sans-serif;
-            background: var(--dark);
-            color: var(--white);
-            padding: 2rem;
-            line-height: 1.6;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
         }
-
+        
         .container {
-            max-width: 1400px;
+            max-width: 800px;
             margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 40px;
         }
-
+        
         h1 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .warning-box {
-            background: rgba(239, 68, 68, 0.1);
-            border: 2px solid var(--error);
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin: 2rem 0;
-        }
-
-        .warning-box h2 {
-            color: var(--error);
-            margin-bottom: 0.5rem;
-        }
-
-        .info-box {
-            background: rgba(99, 102, 241, 0.1);
-            border: 2px solid var(--primary);
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin: 2rem 0;
-        }
-
-        .panel {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
-            padding: 2rem;
-            margin: 1rem 0;
-        }
-
-        .upload-zone {
-            border: 2px dashed var(--primary);
-            border-radius: 12px;
-            padding: 3rem 2rem;
             text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
-            background: rgba(99, 102, 241, 0.05);
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 2.5em;
         }
-
-        .upload-zone:hover { background: rgba(99, 102, 241, 0.1); }
-
-        .control-group {
-            margin: 1.5rem 0;
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 0.9em;
         }
-
-        .control-group label {
+        
+        .warning {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .warning h3 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+        
+        .warning ul {
+            margin-left: 20px;
+            color: #856404;
+        }
+        
+        .section {
+            margin-bottom: 30px;
+        }
+        
+        .section h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
             display: block;
+            margin-bottom: 8px;
             font-weight: 600;
-            margin-bottom: 0.5rem;
+            color: #555;
         }
-
-        input[type="range"] {
+        
+        input[type="file"],
+        input[type="number"],
+        select {
             width: 100%;
-            height: 6px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 3px;
-            -webkit-appearance: none;
-        }
-
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 18px;
-            height: 18px;
-            background: var(--primary);
-            border-radius: 50%;
-            cursor: pointer;
-        }
-
-        input[type="number"] {
-            width: 100%;
-            padding: 0.75rem;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 12px;
+            border: 2px solid #e0e0e0;
             border-radius: 8px;
-            color: var(--white);
-            font-size: 1rem;
+            font-size: 16px;
+            transition: border-color 0.3s;
         }
-
-        .btn {
-            padding: 1rem 2rem;
-            font-size: 1rem;
+        
+        input[type="file"]:focus,
+        input[type="number"]:focus,
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        button {
+            padding: 15px 30px;
+            font-size: 16px;
             font-weight: 600;
             border: none;
-            border-radius: 12px;
+            border-radius: 8px;
             cursor: pointer;
             transition: all 0.3s;
-            font-family: 'Outfit', sans-serif;
         }
-
+        
         .btn-primary {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-            color: var(--white);
+            background: #667eea;
+            color: white;
+            grid-column: 1 / -1;
         }
-
-        .btn-primary:hover:not(:disabled) {
+        
+        .btn-primary:hover {
+            background: #5568d3;
             transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
         }
-
+        
         .btn-primary:disabled {
-            opacity: 0.5;
+            background: #ccc;
             cursor: not-allowed;
+            transform: none;
         }
-
+        
         .stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 1rem;
-            margin: 2rem 0;
-        }
-
-        .stat-item {
-            background: rgba(255, 255, 255, 0.03);
-            padding: 1rem;
+            background: #f8f9fa;
+            padding: 15px;
             border-radius: 8px;
-            border-left: 3px solid var(--primary);
+            margin-top: 20px;
         }
-
+        
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .stat-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+        
         .stat-label {
-            font-size: 0.85rem;
-            color: var(--light-gray);
+            font-weight: 600;
+            color: #666;
         }
-
+        
         .stat-value {
-            font-size: 1.5rem;
+            color: #667eea;
             font-weight: 700;
-            font-family: 'JetBrains Mono', monospace;
-            color: var(--primary);
         }
-
-        code {
-            background: rgba(0, 0, 0, 0.3);
-            padding: 0.2rem 0.5rem;
-            border-radius: 4px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.9rem;
+        
+        #progress {
+            display: none;
+            margin-top: 20px;
         }
-
-        input[type="file"] { display: none; }
+        
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: #e0e0e0;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 5px;
+        }
+        
+        .info-box h3 {
+            color: #1976d2;
+            margin-bottom: 10px;
+        }
+        
+        .info-box code {
+            background: #fff;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🔧 BootCraft - FIXED VERSION</h1>
+        <h1>⚡ BootCraft</h1>
+        <p class="subtitle">Android Boot Animation Creator - Based on MajliTech's Method (Bugs Fixed)</p>
         
-        <div class="warning-box">
-            <h2>⚠️ Common Boot Animation Problems FIXED:</h2>
-            <ul style="margin-left: 1.5rem;">
-                <li><strong>PNG Interlacing removed</strong> - Canvas PNGs are now verified non-interlaced</li>
-                <li><strong>desc.txt uses Unix line endings (LF)</strong> - Not Windows CRLF</li>
-                <li><strong>STORE compression verified</strong> - No DEFLATE/BZIP compression</li>
-                <li><strong>Frame naming fixed</strong> - Proper 00000.png format</li>
-                <li><strong>File order guaranteed</strong> - desc.txt added first</li>
+        <div class="warning">
+            <h3>⚠️ Fixed Bugs from Original Repo:</h3>
+            <ul>
+                <li><strong>ZIP Compression:</strong> Fixed to use STORE (no compression) instead of DEFLATED</li>
+                <li><strong>Line Endings:</strong> Fixed to use Unix LF only (not Windows CRLF)</li>
+                <li><strong>Frame Naming:</strong> Using 4-digit format (0001.png) like their FFmpeg method</li>
             </ul>
         </div>
-
-        <div class="info-box">
-            <h3>📝 Boot Animation Requirements:</h3>
-            <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
-                <li><strong>FPS:</strong> 10-12 recommended (NOT 30!)</li>
-                <li><strong>Resolution:</strong> Match your device screen</li>
-                <li><strong>File size:</strong> Under 10MB ideal</li>
-                <li><strong>Frames:</strong> 60-120 frames max</li>
-                <li><strong>Duration:</strong> 5-8 seconds optimal</li>
-            </ul>
+        
+        <div class="section">
+            <h2>📹 Video Input</h2>
+            <div class="input-group">
+                <label for="videoFile">Select Video File:</label>
+                <input type="file" id="videoFile" accept="video/*" required>
+            </div>
         </div>
-
-        <div class="panel">
-            <h3>🎬 Create Boot Animation</h3>
-            
-            <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
-                <div style="font-size: 3rem; margin-bottom: 1rem;">📤</div>
-                <p><strong>Click to upload video</strong></p>
-                <p style="font-size: 0.9rem; color: var(--light-gray); margin-top: 0.5rem;">Recommended: 5-8 second video</p>
-                <input type="file" id="fileInput" accept="video/*">
-            </div>
-
-            <div class="control-group">
-                <label>Frame Rate (FPS): <span class="stat-value" style="font-size: 1rem;" id="fpsValue">12</span></label>
-                <input type="range" id="fpsSlider" min="6" max="20" value="12">
-                <p style="font-size: 0.8rem; color: var(--light-gray); margin-top: 0.3rem;">⚠️ Boot animations should use 10-12 FPS. Higher = larger file!</p>
-            </div>
-
-            <div class="control-group">
-                <label>Width (px)</label>
-                <input type="number" id="widthInput" value="480" min="1" max="1920">
-            </div>
-
-            <div class="control-group">
-                <label>Height (px)</label>
-                <input type="number" id="heightInput" value="640" min="1" max="1920">
-            </div>
-
-            <div class="stats">
-                <div class="stat-item">
-                    <div class="stat-label">Frames</div>
-                    <div class="stat-value" id="frameCount">0</div>
+        
+        <div class="section">
+            <h2>⚙️ Settings</h2>
+            <div class="controls">
+                <div class="input-group">
+                    <label for="width">Width (px):</label>
+                    <input type="number" id="width" value="480" min="1" max="4096">
                 </div>
-                <div class="stat-item">
-                    <div class="stat-label">Duration</div>
-                    <div class="stat-value" id="duration">0s</div>
+                
+                <div class="input-group">
+                    <label for="height">Height (px):</label>
+                    <input type="number" id="height" value="640" min="1" max="4096">
                 </div>
-                <div class="stat-item">
-                    <div class="stat-label">Est. Size</div>
-                    <div class="stat-value" id="estSize">0 MB</div>
+                
+                <div class="input-group">
+                    <label for="fps">FPS (frames/sec):</label>
+                    <input type="number" id="fps" value="12" min="6" max="20" step="1">
+                    <small style="color: #999; font-size: 12px;">Boot animations work best at 10-12 FPS</small>
+                </div>
+                
+                <div class="input-group">
+                    <label for="loopType">Play Mode:</label>
+                    <select id="loopType">
+                        <option value="p">p - Stop when boot complete</option>
+                        <option value="c">c - Play to completion</option>
+                    </select>
                 </div>
             </div>
-
-            <button class="btn btn-primary" id="exportBtn" disabled style="width: 100%; margin-top: 1rem;">
-                💾 Export bootanimation.zip
-            </button>
         </div>
-
+        
+        <div class="stats" id="stats" style="display: none;">
+            <div class="stat-item">
+                <span class="stat-label">Total Frames:</span>
+                <span class="stat-value" id="frameCount">-</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Duration:</span>
+                <span class="stat-value" id="duration">-</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Estimated Size:</span>
+                <span class="stat-value" id="estSize">-</span>
+            </div>
+        </div>
+        
+        <button class="btn-primary" id="createBtn" onclick="createBootAnimation()">
+            🚀 Create Boot Animation
+        </button>
+        
+        <div id="progress">
+            <p id="progressText">Processing...</p>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill" style="width: 0%">0%</div>
+            </div>
+        </div>
+        
         <div class="info-box">
             <h3>📱 Installation Instructions:</h3>
-            <p><strong>Via ADB (requires root):</strong></p>
-            <code style="display: block; margin: 0.5rem 0;">adb root<br>adb remount<br>adb push bootanimation.zip /system/media/<br>adb shell chmod 644 /system/media/bootanimation.zip<br>adb reboot</code>
-            
-            <p style="margin-top: 1rem;"><strong>Alternative locations to try:</strong></p>
-            <ul style="margin-left: 1.5rem;">
-                <li><code>/system/media/bootanimation.zip</code></li>
-                <li><code>/data/local/bootanimation.zip</code></li>
-                <li><code>/product/media/bootanimation.zip</code></li>
-            </ul>
+            <p>1. Root your device<br>
+            2. Copy bootanimation.zip to one of these locations:<br>
+            &nbsp;&nbsp;&nbsp;<code>/data/local/bootanimation.zip</code> (user override)<br>
+            &nbsp;&nbsp;&nbsp;<code>/system/media/bootanimation.zip</code> (system default)<br>
+            3. Set permissions: <code>chmod 644 bootanimation.zip</code><br>
+            4. Reboot and enjoy!</p>
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js"></script>
     <script>
-        let frames = [];
-        let videoFile = null;
+        let videoElement = null;
+        let canvas = null;
+        let ctx = null;
 
-        const fpsSlider = document.getElementById('fpsSlider');
-        const fpsValue = document.getElementById('fpsValue');
-        const frameCount = document.getElementById('frameCount');
-        const duration = document.getElementById('duration');
-        const estSize = document.getElementById('estSize');
-        const exportBtn = document.getElementById('exportBtn');
-
-        document.getElementById('fileInput').addEventListener('change', async (e) => {
+        document.getElementById('videoFile').addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (!file) return;
             
-            videoFile = file;
-            await extractFrames(file);
+            if (videoElement) {
+                URL.revokeObjectURL(videoElement.src);
+            }
+            
+            videoElement = document.createElement('video');
+            videoElement.src = URL.createObjectURL(file);
+            videoElement.muted = true;
+            
+            videoElement.addEventListener('loadedmetadata', () => {
+                const width = parseInt(document.getElementById('width').value);
+                const height = parseInt(document.getElementById('height').value);
+                const fps = parseInt(document.getElementById('fps').value);
+                const duration = videoElement.duration;
+                const frameCount = Math.floor(duration * fps);
+                
+                document.getElementById('stats').style.display = 'block';
+                document.getElementById('frameCount').textContent = frameCount;
+                document.getElementById('duration').textContent = duration.toFixed(2) + 's';
+                
+                const estSize = (frameCount * width * height * 3 * 0.6) / (1024 * 1024);
+                const sizeText = estSize.toFixed(2) + ' MB';
+                document.getElementById('estSize').textContent = sizeText;
+                document.getElementById('estSize').style.color = estSize > 10 ? '#dc3545' : estSize > 5 ? '#ffc107' : '#28a745';
+                
+                if (frameCount > 150) {
+                    alert('⚠️ Warning: ' + frameCount + ' frames is a lot! Consider using a shorter video or lower FPS for better performance.');
+                }
+            });
         });
 
-        fpsSlider.addEventListener('input', (e) => {
-            fpsValue.textContent = e.target.value;
-            if (parseInt(e.target.value) > 15) {
-                fpsValue.style.color = 'var(--warning)';
-            } else {
-                fpsValue.style.color = 'var(--primary)';
-            }
-            updateStats();
-        });
-
-        async function extractFrames(file) {
-            frames = [];
-            exportBtn.disabled = true;
-            exportBtn.textContent = '⏳ Extracting frames...';
-            
-            const video = document.createElement('video');
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d', {
-                willReadFrequently: true,
-                alpha: false  // Disable alpha for performance
-            });
-            
-            video.preload = 'metadata';
-            video.muted = true;
-            video.playsInline = true;
-            video.src = URL.createObjectURL(file);
-            
-            await new Promise((resolve, reject) => {
-                video.onloadedmetadata = resolve;
-                video.onerror = reject;
-            });
-            
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-            
-            const fps = parseInt(fpsSlider.value);
-            const interval = 1 / fps;
-            const totalFrames = Math.floor(video.duration * fps);
-            
-            console.log(`Extracting ${totalFrames} frames at ${fps} FPS`);
-            
-            for (let i = 0; i < totalFrames; i++) {
-                const time = i * interval;
-                video.currentTime = time;
-                
-                await new Promise(resolve => {
-                    video.onseeked = resolve;
-                });
-                
-                ctx.drawImage(video, 0, 0);
-                
-                // Get PNG data WITHOUT interlacing (Canvas default is non-interlaced)
-                const pngDataURL = canvas.toDataURL('image/png');
-                
-                frames.push({
-                    data: pngDataURL.split(',')[1], // Base64 only
-                    width: canvas.width,
-                    height: canvas.height
-                });
-                
-                if (i % 10 === 0) {
-                    exportBtn.textContent = `⏳ Extracting... ${i}/${totalFrames}`;
-                }
+        async function createBootAnimation() {
+            if (!videoElement) {
+                alert('Please select a video file first!');
+                return;
             }
             
-            URL.revokeObjectURL(video.src);
+            const createBtn = document.getElementById('createBtn');
+            const progress = document.getElementById('progress');
+            const progressText = document.getElementById('progressText');
+            const progressFill = document.getElementById('progressFill');
             
-            console.log(`✓ Extracted ${frames.length} frames`);
-            exportBtn.textContent = '💾 Export bootanimation.zip';
-            exportBtn.disabled = false;
-            updateStats();
-        }
-
-        function updateStats() {
-            const fps = parseInt(fpsSlider.value);
-            frameCount.textContent = frames.length;
-            duration.textContent = frames.length > 0 ? (frames.length / fps).toFixed(1) + 's' : '0s';
-            
-            // Estimate size (PNG base64 averages ~140KB per frame)
-            const estMB = (frames.length * 140) / 1024;
-            estSize.textContent = frames.length > 0 ? estMB.toFixed(1) + ' MB' : '0 MB';
-            
-            // Color code size
-            if (estMB > 10) estSize.style.color = 'var(--error)';
-            else if (estMB > 5) estSize.style.color = 'var(--warning)';
-            else estSize.style.color = 'var(--success)';
-        }
-
-        exportBtn.addEventListener('click', async () => {
-            if (frames.length === 0) return;
-            
-            // Warnings
-            if (frames.length > 150) {
-                if (!confirm(`⚠️ ${frames.length} frames is TOO MANY!\n\nBoot animations should have 60-120 frames.\nLower the FPS or use a shorter video.\n\nContinue anyway?`)) {
-                    return;
-                }
-            }
-            
-            exportBtn.disabled = true;
-            exportBtn.textContent = '⏳ Creating ZIP...';
+            createBtn.disabled = true;
+            progress.style.display = 'block';
             
             try {
-                const width = document.getElementById('widthInput').value;
-                const height = document.getElementById('heightInput').value;
-                const fps = fpsSlider.value;
+                const width = parseInt(document.getElementById('width').value);
+                const height = parseInt(document.getElementById('height').value);
+                const fps = parseInt(document.getElementById('fps').value);
+                const loopType = document.getElementById('loopType').value;
                 
-                console.log('\n=== CREATING BOOTANIMATION.ZIP ===');
-                console.log(`Resolution: ${width}x${height}`);
-                console.log(`FPS: ${fps}`);
-                console.log(`Frames: ${frames.length}`);
-                console.log(`Duration: ${(frames.length / fps).toFixed(2)}s`);
+                // Create canvas
+                canvas = document.createElement('canvas');
+                canvas.width = width;
+                canvas.height = height;
+                ctx = canvas.getContext('2d');
                 
-                // Create desc.txt with Unix line endings (LF only, NO CRLF!)
-                // Format: width height fps\np loop pause part0
-                // loop=0 means infinite, pause=0 means no pause
-                const descText = `${width} ${height} ${fps}\np 0 0 part0`;
+                // Calculate frames
+                const duration = videoElement.duration;
+                const totalFrames = Math.floor(duration * fps);
+                const frameDuration = 1 / fps;
                 
-                console.log('\ndesc.txt content:');
-                console.log(descText);
-                console.log('desc.txt bytes:', descText.length);
-                console.log('Line ending check:', descText.includes('\r') ? '❌ CONTAINS CRLF!' : '✓ Unix LF only');
+                console.log('=== BootCraft - MajliTech Method ===');
+                console.log('Resolution:', width, 'x', height);
+                console.log('FPS:', fps);
+                console.log('Total Frames:', totalFrames);
+                console.log('Duration:', duration.toFixed(2), 'seconds');
                 
-                // Create ZIP using JSZip with STORE compression
+                // Extract frames (using their %04d.png naming: 0001.png, 0002.png, ...)
+                progressText.textContent = 'Extracting frames...';
+                const frames = [];
+                
+                for (let i = 0; i < totalFrames; i++) {
+                    const time = i * frameDuration;
+                    videoElement.currentTime = time;
+                    
+                    await new Promise(resolve => {
+                        videoElement.addEventListener('seeked', resolve, { once: true });
+                    });
+                    
+                    ctx.drawImage(videoElement, 0, 0, width, height);
+                    const dataUrl = canvas.toDataURL('image/png');
+                    const base64Data = dataUrl.split(',')[1];
+                    
+                    // Frame naming: %04d format (0001, 0002, 0003, ...)
+                    // This matches their FFmpeg command: %04d.png
+                    const frameNumber = String(i + 1).padStart(4, '0');
+                    const frameName = `${frameNumber}.png`;
+                    
+                    frames.push({
+                        name: frameName,
+                        data: base64Data
+                    });
+                    
+                    const percent = Math.floor(((i + 1) / totalFrames) * 100);
+                    progressFill.style.width = percent + '%';
+                    progressFill.textContent = percent + '%';
+                }
+                
+                console.log('Frames extracted:', frames.length);
+                console.log('First frame:', frames[0].name);
+                console.log('Last frame:', frames[frames.length - 1].name);
+                
+                // Create desc.txt (EXACTLY like their gen_desc function)
+                // Line 39: header = f"{specs['height']} {specs['width']} {specs['fps']}\n"
+                // Line 42: appe = f"{i['type']} {i['count']} {i['delay']} part{i['part']}\n"
+                progressText.textContent = 'Creating desc.txt...';
+                
+                const descContent = `${height} ${width} ${fps}\n${loopType} 0 0 part0\n`;
+                
+                console.log('=== desc.txt Content ===');
+                console.log(descContent);
+                console.log('Line endings check:', descContent.includes('\r') ? 'CRLF (BAD!)' : 'LF only (GOOD!)');
+                
+                // Create ZIP (FIXED from their buggy version)
+                // Their bug (line 80): compresslevel=zipfile.ZIP_DEFLATED
+                // Fixed: compression: 'STORE' (no compression)
+                progressText.textContent = 'Creating bootanimation.zip...';
+                
                 const zip = new JSZip();
                 
-                // CRITICAL: Add desc.txt FIRST (Android expects it first)
-                zip.file('desc.txt', descText, {
+                // Add desc.txt FIRST (important for Android)
+                zip.file('desc.txt', descContent, {
                     compression: 'STORE',
                     binary: false
                 });
@@ -426,85 +436,65 @@
                 // Create part0 folder
                 const part0 = zip.folder('part0');
                 
-                // Add frames in order
-                console.log('\nAdding frames to part0/...');
-                for (let i = 0; i < frames.length; i++) {
-                    // Frame naming: 00000.png, 00001.png, 00002.png, etc.
-                    const frameName = String(i).padStart(5, '0') + '.png';
-                    
-                    part0.file(frameName, frames[i].data, {
+                // Add frames to part0
+                for (let frame of frames) {
+                    part0.file(frame.name, frame.data, {
                         base64: true,
-                        compression: 'STORE'  // CRITICAL: No compression!
+                        compression: 'STORE'  // FIXED: Use STORE not DEFLATED
                     });
-                    
-                    if (i === 0 || i === frames.length - 1) {
-                        console.log(`  ${frameName}`);
-                    } else if (i === 1) {
-                        console.log(`  ... ${frames.length - 2} more frames ...`);
-                    }
                 }
                 
-                console.log('\nGenerating ZIP...');
+                progressText.textContent = 'Generating ZIP file...';
                 
-                // Generate ZIP with STORE compression (no compression!)
                 const content = await zip.generateAsync({
                     type: 'blob',
-                    compression: 'STORE',  // CRITICAL!
-                    compressionOptions: {
-                        level: 0  // No compression
-                    },
-                    platform: 'UNIX',  // Unix platform for compatibility
+                    compression: 'STORE',              // FIXED: STORE not DEFLATED
+                    compressionOptions: { level: 0 },  // No compression
+                    platform: 'UNIX',                  // Unix platform
                     streamFiles: false
                 });
                 
-                const sizeMB = (content.size / 1024 / 1024).toFixed(2);
-                console.log(`\n✓ ZIP created: ${sizeMB} MB`);
-                
-                // Warnings
-                if (content.size > 10 * 1024 * 1024) {
-                    console.warn(`⚠️ ${sizeMB} MB is TOO LARGE!`);
-                    console.warn('   Android may reject files > 10MB');
-                    console.warn('   Solution: Lower FPS or shorter video');
-                }
-                
-                if (frames.length > 120) {
-                    console.warn(`⚠️ ${frames.length} frames is too many!`);
-                    console.warn('   Recommended: 60-120 frames');
-                }
-                
-                if (parseInt(fps) > 15) {
-                    console.warn(`⚠️ ${fps} FPS is too high!`);
-                    console.warn('   Boot has limited resources');
-                    console.warn('   Recommended: 10-12 FPS');
-                }
+                const sizeMB = (content.size / (1024 * 1024)).toFixed(2);
+                console.log('ZIP size:', sizeMB, 'MB');
+                console.log('Compression: STORE (none)');
                 
                 // Download
-                const link = document.createElement('a');
-                link.href = URL.createObjectURL(content);
-                link.download = 'bootanimation.zip';
-                link.click();
+                const url = URL.createObjectURL(content);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'bootanimation.zip';
+                a.click();
+                URL.revokeObjectURL(url);
                 
-                console.log('\n✅ DOWNLOAD COMPLETE!\n');
-                console.log('📱 INSTALLATION:');
-                console.log('  adb root');
-                console.log('  adb remount');
-                console.log('  adb push bootanimation.zip /system/media/');
-                console.log('  adb shell chmod 644 /system/media/bootanimation.zip');
-                console.log('  adb reboot');
+                progressText.textContent = '✅ Success! Boot animation created!';
+                progressFill.style.width = '100%';
+                progressFill.textContent = '100%';
                 
-                exportBtn.textContent = '✅ Downloaded!';
-                setTimeout(() => {
-                    exportBtn.textContent = '💾 Export bootanimation.zip';
-                    exportBtn.disabled = false;
-                }, 3000);
+                console.log('=== Console Summary ===');
+                console.log('✅ Frames: ' + totalFrames);
+                console.log('✅ Naming: 0001.png format (matches FFmpeg %04d)');
+                console.log('✅ desc.txt: Unix LF line endings (FIXED)');
+                console.log('✅ ZIP compression: STORE (FIXED from DEFLATED bug)');
+                console.log('✅ File size: ' + sizeMB + ' MB');
+                
+                if (totalFrames > 120) {
+                    console.warn('⚠️ Warning: ' + totalFrames + ' frames may be too many');
+                }
+                if (sizeMB > 10) {
+                    console.warn('⚠️ Warning: ' + sizeMB + ' MB may be too large');
+                }
+                if (fps > 15) {
+                    console.warn('⚠️ Warning: ' + fps + ' FPS may be too high for boot');
+                }
                 
             } catch (error) {
-                console.error('❌ Export failed:', error);
-                alert('Export failed: ' + error.message);
-                exportBtn.textContent = '💾 Export bootanimation.zip';
-                exportBtn.disabled = false;
+                console.error('Error:', error);
+                alert('Error creating boot animation: ' + error.message);
+                progressText.textContent = '❌ Error: ' + error.message;
+            } finally {
+                createBtn.disabled = false;
             }
-        });
+        }
     </script>
 </body>
 </html>
