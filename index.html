@@ -2,352 +2,475 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BootCraft - Android Boot Animation Creator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SC Boot Animator - Professional Edition</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-            color: #333;
-        }
-        
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            padding: 40px;
-        }
-        
-        h1 {
-            text-align: center;
-            color: #667eea;
-            margin-bottom: 10px;
-            font-size: 2.5em;
-        }
-        
-        .subtitle {
-            text-align: center;
-            color: #666;
-            margin-bottom: 30px;
-            font-size: 0.9em;
-        }
-        
-        .warning {
-            background: #fff3cd;
-            border: 2px solid #ffc107;
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 20px;
-        }
-        
-        .warning h3 {
-            color: #856404;
-            margin-bottom: 10px;
-        }
-        
-        .warning ul {
-            margin-left: 20px;
-            color: #856404;
-        }
-        
-        .section {
-            margin-bottom: 30px;
-        }
-        
-        .section h2 {
-            color: #667eea;
-            margin-bottom: 15px;
-            font-size: 1.3em;
-        }
-        
-        .input-group {
-            margin-bottom: 20px;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #555;
-        }
-        
-        input[type="file"],
-        input[type="number"],
-        select {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 16px;
-            transition: border-color 0.3s;
-        }
-        
-        input[type="file"]:focus,
-        input[type="number"]:focus,
-        select:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-        
-        .controls {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
-        
-        button {
-            padding: 15px 30px;
-            font-size: 16px;
-            font-weight: 600;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .btn-primary {
-            background: #667eea;
-            color: white;
-            grid-column: 1 / -1;
-        }
-        
-        .btn-primary:hover {
-            background: #5568d3;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-        }
-        
-        .btn-primary:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-            transform: none;
-        }
-        
-        .stats {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 20px;
-        }
-        
-        .stat-item {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #e0e0e0;
-        }
-        
-        .stat-item:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
-        }
-        
-        .stat-label {
-            font-weight: 600;
-            color: #666;
-        }
-        
-        .stat-value {
-            color: #667eea;
-            font-weight: 700;
-        }
-        
-        #progress {
-            display: none;
-            margin-top: 20px;
-        }
-        
-        .progress-bar {
-            width: 100%;
-            height: 30px;
-            background: #e0e0e0;
-            border-radius: 15px;
-            overflow: hidden;
-            margin-top: 10px;
-        }
-        
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-            transition: width 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 600;
-        }
-        
-        .info-box {
-            background: #e3f2fd;
-            border-left: 4px solid #2196f3;
-            padding: 15px;
-            margin-top: 20px;
-            border-radius: 5px;
-        }
-        
-        .info-box h3 {
-            color: #1976d2;
-            margin-bottom: 10px;
-        }
-        
-        .info-box code {
-            background: #fff;
-            padding: 2px 6px;
-            border-radius: 3px;
-            font-family: 'Courier New', monospace;
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0a0e27; color: #fff; overflow-x: hidden; }
+
+        /* Landing Page */
+        #landing { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); overflow: hidden; padding: 20px; }
+        .bg-animation { position: absolute; width: 100%; height: 100%; overflow: hidden; z-index: 0; }
+        .bg-animation span { position: absolute; display: block; width: 20px; height: 20px; background: rgba(255, 255, 255, 0.1); animation: float 15s infinite; border-radius: 50%; }
+        .bg-animation span:nth-child(1) { left: 10%; animation-duration: 12s; }
+        .bg-animation span:nth-child(2) { left: 20%; animation-duration: 15s; width: 40px; height: 40px; }
+        .bg-animation span:nth-child(3) { left: 30%; animation-duration: 18s; }
+        .bg-animation span:nth-child(4) { left: 40%; animation-duration: 20s; width: 60px; height: 60px; }
+        @keyframes float { 0%, 100% { transform: translateY(100vh) rotate(0deg); opacity: 0; } 10%, 90% { opacity: 1; } 100% { transform: translateY(-100vh) rotate(720deg); } }
+        .hero { text-align: center; z-index: 1; animation: fadeInUp 1s ease; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        .hero h1 { font-size: clamp(2em, 8vw, 4em); margin-bottom: 20px; background: linear-gradient(45deg, #fff, #a8edea); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero p { font-size: clamp(1em, 4vw, 1.3em); margin-bottom: 40px; }
+        .cta-button { padding: 18px 50px; font-size: clamp(1em, 4vw, 1.2em); font-weight: 600; background: white; color: #667eea; border: none; border-radius: 50px; cursor: pointer; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+        .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 20px; margin-top: 60px; max-width: 900px; width: 100%; padding: 0 20px; z-index: 1; }
+        .feature { text-align: center; padding: 20px; background: rgba(255, 255, 255, 0.1); border-radius: 15px; backdrop-filter: blur(10px); }
+        .feature-icon { font-size: clamp(2em, 8vw, 3em); margin-bottom: 10px; }
+
+        /* App */
+        #app { display: none; min-height: 100vh; background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); padding: 10px; }
+        .app-container { max-width: 1200px; margin: 0 auto; }
+        .app-header { background: rgba(255, 255, 255, 0.1); padding: 15px 20px; border-radius: 15px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
+        .app-header h1 { font-size: clamp(1.3em, 5vw, 2em); }
+        .back-btn { padding: 10px 20px; background: rgba(255, 255, 255, 0.2); border: 2px solid white; color: white; border-radius: 25px; cursor: pointer; font-weight: 600; }
+        .tabs { display: flex; gap: 5px; margin-bottom: 15px; }
+        .tab { flex: 1; min-width: 120px; padding: 12px 10px; background: rgba(255, 255, 255, 0.1); border: 2px solid transparent; border-radius: 10px; cursor: pointer; text-align: center; font-weight: 600; }
+        .tab.active { background: rgba(255, 255, 255, 0.2); border-color: white; }
+        .tab-content { display: none; background: rgba(255, 255, 255, 0.1); padding: 20px; border-radius: 15px; }
+        .tab-content.active { display: block; }
+        .section { margin-bottom: 25px; }
+        .section h2 { margin-bottom: 15px; font-size: clamp(1.2em, 4vw, 1.5em); }
+        .input-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-weight: 600; }
+        input[type="file"], input[type="number"], select { width: 100%; padding: 12px; border: 2px solid rgba(255, 255, 255, 0.3); border-radius: 8px; font-size: 16px; background: rgba(255, 255, 255, 0.1); color: white; }
+        .controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; }
+        button { padding: 15px 25px; font-size: clamp(0.9em, 3vw, 1em); font-weight: 600; border: none; border-radius: 8px; cursor: pointer; }
+        .btn-primary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+        .btn-secondary { background: rgba(255, 255, 255, 0.2); color: white; border: 2px solid white; }
+        #videoPreview { width: 100%; border-radius: 10px; margin: 20px 0; display: none; }
+
+        /* Professional Timeline */
+        .timeline-container { display: none; background: rgba(0, 0, 0, 0.4); padding: 30px 20px; border-radius: 10px; margin: 20px 0; }
+        .timeline-wrapper { position: relative; height: 80px; background: rgba(255, 255, 255, 0.1); border-radius: 10px; margin: 20px 0; }
+        .timeline-track { position: absolute; top: 50%; left: 0; right: 0; height: 8px; background: rgba(255, 255, 255, 0.2); transform: translateY(-50%); }
+        .timeline-selection { position: absolute; top: 50%; height: 8px; background: linear-gradient(90deg, #00ff88, #00d4ff); transform: translateY(-50%); }
+        .timeline-handle { position: absolute; top: 50%; width: 20px; height: 60px; background: white; border: 3px solid #00ff88; border-radius: 5px; transform: translate(-50%, -50%); cursor: ew-resize; z-index: 10; }
+        .trim-values { display: flex; justify-content: space-between; margin-top: 15px; padding: 15px; background: rgba(0, 0, 0, 0.3); border-radius: 8px; }
+        .trim-value { text-align: center; }
+        .trim-value span { font-size: 1.3em; font-weight: 700; color: #00ff88; }
+
+        /* Crop Modal */
+        .crop-modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.95); z-index: 1000; }
+        .crop-modal.active { display: flex; flex-direction: column; }
+        .crop-modal-header { padding: 20px; background: rgba(255, 255, 255, 0.1); display: flex; justify-content: space-between; }
+        .crop-modal-body { flex: 1; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        #cropCanvas { max-width: 90%; max-height: 80vh; border: 2px solid rgba(255, 255, 255, 0.3); cursor: crosshair; }
+        .crop-overlay { position: absolute; border: 3px solid #00ff88; background: rgba(0, 255, 136, 0.1); box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.5); }
+        .crop-handle { position: absolute; width: 20px; height: 20px; background: white; border: 3px solid #00ff88; border-radius: 50%; cursor: move; z-index: 10; }
+        .crop-handle.nw { top: 0; left: 0; transform: translate(-50%, -50%); cursor: nwse-resize; }
+        .crop-handle.ne { top: 0; right: 0; transform: translate(50%, -50%); cursor: nesw-resize; }
+        .crop-handle.sw { bottom: 0; left: 0; transform: translate(-50%, 50%); cursor: nesw-resize; }
+        .crop-handle.se { bottom: 0; right: 0; transform: translate(50%, 50%); cursor: nwse-resize; }
+        .crop-modal-footer { padding: 20px; background: rgba(255, 255, 255, 0.1); display: flex; gap: 15px; justify-content: center; }
+
+        .stats { background: rgba(0, 0, 0, 0.3); padding: 15px; border-radius: 10px; margin-top: 20px; }
+        .stat-item { display: flex; justify-content: space-between; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid rgba(255, 255, 255, 0.2); }
+        .stat-value { color: #00ff88; font-weight: 700; }
+        .progress-container { display: none; margin-top: 20px; }
+        .progress-bar { width: 100%; height: 40px; background: rgba(0, 0, 0, 0.3); border-radius: 20px; overflow: hidden; margin-top: 10px; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, #00ff88 0%, #00d4ff 100%); display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; }
+        .info-box { background: rgba(33, 150, 243, 0.2); border-left: 4px solid #2196f3; padding: 15px; margin-top: 20px; border-radius: 5px; }
+        code { background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 3px; }
+
+        @media (max-width: 768px) {
+            .controls { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>⚡ BootCraft</h1>
-        <p class="subtitle">Android Boot Animation Creator - Based on MajliTech's Method (Bugs Fixed)</p>
-        
-        <div class="warning">
-            <h3>⚠️ Fixed Bugs from Original Repo:</h3>
-            <ul>
-                <li><strong>ZIP Compression:</strong> Fixed to use STORE (no compression) instead of DEFLATED</li>
-                <li><strong>Line Endings:</strong> Fixed to use Unix LF only (not Windows CRLF)</li>
-                <li><strong>Frame Naming:</strong> Using 4-digit format (0001.png) like their FFmpeg method</li>
-            </ul>
+    <div id="landing">
+        <div class="bg-animation">
+            <span></span><span></span><span></span><span></span>
         </div>
-        
-        <div class="section">
-            <h2>📹 Video Input</h2>
-            <div class="input-group">
-                <label for="videoFile">Select Video File:</label>
-                <input type="file" id="videoFile" accept="video/*" required>
+        <div class="hero">
+            <h1>⚡ SC Boot Animator</h1>
+            <p>Create stunning Android boot animations</p>
+            <button class="cta-button" onclick="showApp()">Get Started →</button>
+        </div>
+        <div class="features">
+            <div class="feature"><div class="feature-icon">✂️</div><h3>Professional Trim</h3><p>Timeline with dual handles</p></div>
+            <div class="feature"><div class="feature-icon">🔲</div><h3>Visual Crop</h3><p>Stretch and resize</p></div>
+            <div class="feature"><div class="feature-icon">🚀</div><h3>Fast Export</h3><p>Ready-to-flash ZIP</p></div>
+        </div>
+    </div>
+
+    <div id="app">
+        <div class="app-container">
+            <div class="app-header">
+                <h1>⚡ SC Boot Animator</h1>
+                <button class="back-btn" onclick="showLanding()">← Back</button>
             </div>
-        </div>
-        
-        <div class="section">
-            <h2>⚙️ Settings</h2>
-            <div class="controls">
-                <div class="input-group">
-                    <label for="width">Width (px):</label>
-                    <input type="number" id="width" value="480" min="1" max="4096">
+
+            <div class="tabs">
+                <div class="tab active" onclick="switchTab(0)">📹 Video</div>
+                <div class="tab" onclick="switchTab(1)">⚙️ Configure</div>
+                <div class="tab" onclick="switchTab(2)">🚀 Create</div>
+            </div>
+
+            <!-- Tab 1: Video Editor -->
+            <div class="tab-content active" id="tab1">
+                <div class="section">
+                    <h2>📹 Upload Video</h2>
+                    <div class="input-group">
+                        <input type="file" id="videoFile" accept="video/*" onchange="loadVideo(this)">
+                    </div>
                 </div>
-                
-                <div class="input-group">
-                    <label for="height">Height (px):</label>
-                    <input type="number" id="height" value="640" min="1" max="4096">
+
+                <video id="videoPreview" controls playsinline></video>
+
+                <div class="timeline-container" id="timelineContainer">
+                    <h3 style="margin-bottom: 15px;">✂️ Trim Video</h3>
+                    <p style="font-size: 0.9em; margin-bottom: 20px; opacity: 0.8;">Drag the handles to select your clip</p>
+                    
+                    <div class="timeline-wrapper">
+                        <div class="timeline-track"></div>
+                        <div class="timeline-selection" id="timelineSelection"></div>
+                        <div class="timeline-handle" id="handleStart"></div>
+                        <div class="timeline-handle" id="handleEnd"></div>
+                    </div>
+
+                    <div class="trim-values">
+                        <div class="trim-value"><label>Start</label><span id="trimStartDisplay">0:00</span></div>
+                        <div class="trim-value"><label>Duration</label><span id="trimDurationDisplay">0:00</span></div>
+                        <div class="trim-value"><label>End</label><span id="trimEndDisplay">0:00</span></div>
+                    </div>
                 </div>
-                
-                <div class="input-group">
-                    <label for="fps">FPS (frames/sec):</label>
-                    <input type="number" id="fps" value="12" min="6" max="20" step="1">
-                    <small style="color: #999; font-size: 12px;">Boot animations work best at 10-12 FPS</small>
+
+                <div class="section" id="cropSection" style="display: none;">
+                    <button class="btn-secondary" style="width: 100%;" onclick="openCropModal()">🔲 Crop Video</button>
+                    <p id="cropStatus" style="text-align: center; margin-top: 10px; color: #00ff88; display: none;">✓ Crop applied</p>
                 </div>
-                
-                <div class="input-group">
-                    <label for="loopType">Play Mode:</label>
-                    <select id="loopType">
-                        <option value="p">p - Stop when boot complete</option>
-                        <option value="c">c - Play to completion</option>
-                    </select>
+
+                <button class="btn-primary" style="width: 100%; margin-top: 20px;" onclick="switchTab(1)" id="nextBtn1" disabled>Next →</button>
+            </div>
+
+            <!-- Tab 2: Configure -->
+            <div class="tab-content" id="tab2">
+                <div class="section">
+                    <h2>⚙️ Settings</h2>
+                    <div class="controls">
+                        <div class="input-group"><label>Width (px):</label><input type="number" id="width" value="480"></div>
+                        <div class="input-group"><label>Height (px):</label><input type="number" id="height" value="640"></div>
+                        <div class="input-group"><label>FPS:</label><input type="number" id="fps" value="12" min="6" max="20" onchange="updateStats()"></div>
+                        <div class="input-group"><label>Play Mode:</label><select id="loopType"><option value="p">Stop when boot complete</option><option value="c">Play to completion</option></select></div>
+                    </div>
+                </div>
+
+                <div class="stats" id="stats" style="display: none;">
+                    <div class="stat-item"><span>Frames:</span><span class="stat-value" id="frameCount">-</span></div>
+                    <div class="stat-item"><span>Duration:</span><span class="stat-value" id="duration">-</span></div>
+                    <div class="stat-item"><span>Size:</span><span class="stat-value" id="estSize">-</span></div>
+                </div>
+
+                <button class="btn-primary" style="width: 100%; margin-top: 20px;" onclick="switchTab(2)">Next →</button>
+            </div>
+
+            <!-- Tab 3: Create -->
+            <div class="tab-content" id="tab3">
+                <div class="section">
+                    <h2>🚀 Create Boot Animation</h2>
+                    <div class="stats">
+                        <div class="stat-item"><span>Resolution:</span><span class="stat-value" id="finalRes">-</span></div>
+                        <div class="stat-item"><span>FPS:</span><span class="stat-value" id="finalFps">-</span></div>
+                        <div class="stat-item"><span>Frames:</span><span class="stat-value" id="finalFrames">-</span></div>
+                        <div class="stat-item"><span>Duration:</span><span class="stat-value" id="finalDuration">-</span></div>
+                    </div>
+                    <button class="btn-primary" style="width: 100%; margin-top: 30px; padding: 20px;" onclick="createBootAnimation()" id="createBtn">🚀 Create</button>
+                </div>
+
+                <div class="progress-container" id="progress">
+                    <p id="progressText">Processing...</p>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill" style="width: 0%">0%</div>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <h3>📱 Installation:</h3>
+                    <p>1. Root device<br>2. Copy to: <code>/data/local/bootanimation.zip</code><br>3. Set perms: <code>chmod 644</code><br>4. Reboot</p>
                 </div>
             </div>
         </div>
-        
-        <div class="stats" id="stats" style="display: none;">
-            <div class="stat-item">
-                <span class="stat-label">Total Frames:</span>
-                <span class="stat-value" id="frameCount">-</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-label">Duration:</span>
-                <span class="stat-value" id="duration">-</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-label">Estimated Size:</span>
-                <span class="stat-value" id="estSize">-</span>
+    </div>
+
+    <!-- Crop Modal -->
+    <div class="crop-modal" id="cropModal">
+        <div class="crop-modal-header">
+            <h2>🔲 Crop Video</h2>
+            <button class="back-btn" onclick="closeCropModal()">✕ Close</button>
+        </div>
+        <div class="crop-modal-body">
+            <div style="position: relative;">
+                <canvas id="cropCanvas"></canvas>
+                <div class="crop-overlay" id="cropOverlay" style="display: none;">
+                    <div class="crop-handle nw"></div>
+                    <div class="crop-handle ne"></div>
+                    <div class="crop-handle sw"></div>
+                    <div class="crop-handle se"></div>
+                </div>
             </div>
         </div>
-        
-        <button class="btn-primary" id="createBtn" onclick="createBootAnimation()">
-            🚀 Create Boot Animation
-        </button>
-        
-        <div id="progress">
-            <p id="progressText">Processing...</p>
-            <div class="progress-bar">
-                <div class="progress-fill" id="progressFill" style="width: 0%">0%</div>
-            </div>
-        </div>
-        
-        <div class="info-box">
-            <h3>📱 Installation Instructions:</h3>
-            <p>1. Root your device<br>
-            2. Copy bootanimation.zip to one of these locations:<br>
-            &nbsp;&nbsp;&nbsp;<code>/data/local/bootanimation.zip</code> (user override)<br>
-            &nbsp;&nbsp;&nbsp;<code>/system/media/bootanimation.zip</code> (system default)<br>
-            3. Set permissions: <code>chmod 644 bootanimation.zip</code><br>
-            4. Reboot and enjoy!</p>
+        <div class="crop-modal-footer">
+            <button class="btn-secondary" onclick="resetCrop()">Reset</button>
+            <button class="btn-primary" onclick="applyCrop()">✓ Apply</button>
         </div>
     </div>
 
     <script>
-        let videoElement = null;
-        let canvas = null;
-        let ctx = null;
+        let videoElement, canvas, ctx, cropData = null, trimData = { start: 0, end: 0, duration: 0 };
+        let isDragging = false, currentHandle = null;
 
-        document.getElementById('videoFile').addEventListener('change', function(e) {
-            const file = e.target.files[0];
+        function showApp() { document.getElementById('landing').style.display = 'none'; document.getElementById('app').style.display = 'block'; }
+        function showLanding() { document.getElementById('landing').style.display = 'flex'; document.getElementById('app').style.display = 'none'; resetAll(); }
+        function switchTab(i) {
+            document.querySelectorAll('.tab').forEach((t, idx) => t.classList.toggle('active', idx === i));
+            document.querySelectorAll('.tab-content').forEach((c, idx) => c.classList.toggle('active', idx === i));
+            if (i === 2) updateFinalStats();
+        }
+        function resetAll() {
+            videoElement = null; cropData = null; trimData = { start: 0, end: 0, duration: 0 };
+            document.getElementById('videoFile').value = '';
+            document.getElementById('videoPreview').style.display = 'none';
+            document.getElementById('timelineContainer').style.display = 'none';
+            document.getElementById('cropSection').style.display = 'none';
+            document.getElementById('nextBtn1').disabled = true;
+        }
+        function formatTime(s) { const m = Math.floor(s / 60), sec = Math.floor(s % 60); return `${m}:${sec.toString().padStart(2, '0')}`; }
+
+        function loadVideo(input) {
+            const file = input.files[0];
             if (!file) return;
-            
-            if (videoElement) {
-                URL.revokeObjectURL(videoElement.src);
-            }
-            
-            videoElement = document.createElement('video');
+            videoElement = document.getElementById('videoPreview');
             videoElement.src = URL.createObjectURL(file);
-            videoElement.muted = true;
-            
+            videoElement.style.display = 'block';
             videoElement.addEventListener('loadedmetadata', () => {
-                const width = parseInt(document.getElementById('width').value);
-                const height = parseInt(document.getElementById('height').value);
-                const fps = parseInt(document.getElementById('fps').value);
                 const duration = videoElement.duration;
-                const frameCount = Math.floor(duration * fps);
-                
-                document.getElementById('stats').style.display = 'block';
-                document.getElementById('frameCount').textContent = frameCount;
-                document.getElementById('duration').textContent = duration.toFixed(2) + 's';
-                
-                const estSize = (frameCount * width * height * 3 * 0.6) / (1024 * 1024);
-                const sizeText = estSize.toFixed(2) + ' MB';
-                document.getElementById('estSize').textContent = sizeText;
-                document.getElementById('estSize').style.color = estSize > 10 ? '#dc3545' : estSize > 5 ? '#ffc107' : '#28a745';
-                
-                if (frameCount > 150) {
-                    alert('⚠️ Warning: ' + frameCount + ' frames is a lot! Consider using a shorter video or lower FPS for better performance.');
-                }
+                trimData = { start: 0, end: duration, duration };
+                document.getElementById('timelineContainer').style.display = 'block';
+                document.getElementById('cropSection').style.display = 'block';
+                document.getElementById('nextBtn1').disabled = false;
+                setupTimeline();
+                updateStats();
             });
-        });
+        }
 
-        async function createBootAnimation() {
-            if (!videoElement) {
-                alert('Please select a video file first!');
-                return;
+        function setupTimeline() {
+            const duration = trimData.duration;
+            const container = document.querySelector('.timeline-wrapper');
+            const handleStart = document.getElementById('handleStart');
+            const handleEnd = document.getElementById('handleEnd');
+            
+            handleStart.style.left = '0%';
+            handleEnd.style.left = '100%';
+            updateTimelineSelection();
+            updateTimelineDisplay();
+            
+            function handlePointerDown(e, handle) {
+                e.preventDefault();
+                isDragging = true;
+                currentHandle = handle;
             }
             
+            function handlePointerMove(e) {
+                if (!isDragging) return;
+                const rect = container.getBoundingClientRect();
+                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                let percent = ((clientX - rect.left) / rect.width) * 100;
+                percent = Math.max(0, Math.min(100, percent));
+                const time = (percent / 100) * duration;
+                
+                if (currentHandle === 'start' && time < trimData.end - 0.5) {
+                    trimData.start = time;
+                    handleStart.style.left = percent + '%';
+                } else if (currentHandle === 'end' && time > trimData.start + 0.5) {
+                    trimData.end = time;
+                    handleEnd.style.left = percent + '%';
+                }
+                updateTimelineSelection();
+                updateTimelineDisplay();
+                updateStats();
+            }
+            
+            function handlePointerUp() { isDragging = false; currentHandle = null; }
+            
+            handleStart.addEventListener('mousedown', (e) => handlePointerDown(e, 'start'));
+            handleEnd.addEventListener('mousedown', (e) => handlePointerDown(e, 'end'));
+            handleStart.addEventListener('touchstart', (e) => handlePointerDown(e, 'start'));
+            handleEnd.addEventListener('touchstart', (e) => handlePointerDown(e, 'end'));
+            document.addEventListener('mousemove', handlePointerMove);
+            document.addEventListener('touchmove', handlePointerMove, { passive: false });
+            document.addEventListener('mouseup', handlePointerUp);
+            document.addEventListener('touchend', handlePointerUp);
+        }
+
+        function updateTimelineSelection() {
+            const sel = document.getElementById('timelineSelection');
+            const start = parseFloat(document.getElementById('handleStart').style.left);
+            const end = parseFloat(document.getElementById('handleEnd').style.left);
+            sel.style.left = start + '%';
+            sel.style.width = (end - start) + '%';
+        }
+
+        function updateTimelineDisplay() {
+            document.getElementById('trimStartDisplay').textContent = formatTime(trimData.start);
+            document.getElementById('trimEndDisplay').textContent = formatTime(trimData.end);
+            document.getElementById('trimDurationDisplay').textContent = formatTime(trimData.end - trimData.start);
+        }
+
+        // Crop
+        let cropCanvas, cropCtx, cropSelection = null, cropDragging = false, cropHandle = null, cropStartX, cropStartY;
+
+        function openCropModal() {
+            document.getElementById('cropModal').classList.add('active');
+            cropCanvas = document.getElementById('cropCanvas');
+            cropCtx = cropCanvas.getContext('2d');
+            cropCanvas.width = videoElement.videoWidth;
+            cropCanvas.height = videoElement.videoHeight;
+            videoElement.currentTime = trimData.start;
+            setTimeout(() => {
+                cropCtx.drawImage(videoElement, 0, 0);
+                if (cropData) showCropOverlay(cropData);
+                setupCropEvents();
+            }, 100);
+        }
+
+        function closeCropModal() { document.getElementById('cropModal').classList.remove('active'); }
+
+        function setupCropEvents() {
+            function getCoords(e) {
+                const rect = cropCanvas.getBoundingClientRect();
+                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+                const x = ((clientX - rect.left) / rect.width) * cropCanvas.width;
+                const y = ((clientY - rect.top) / rect.height) * cropCanvas.height;
+                return { x, y, rect };
+            }
+            
+            function handleStart(e) {
+                e.preventDefault();
+                const coords = getCoords(e);
+                if (e.target.classList.contains('crop-handle')) {
+                    cropDragging = true;
+                    cropHandle = e.target.classList[1];
+                } else {
+                    cropDragging = true;
+                    cropStartX = coords.x;
+                    cropStartY = coords.y;
+                    cropHandle = null;
+                }
+            }
+            
+            function handleMove(e) {
+                if (!cropDragging) return;
+                e.preventDefault();
+                const coords = getCoords(e);
+                
+                if (cropHandle) {
+                    if (!cropSelection) return;
+                    const sel = cropSelection;
+                    if (cropHandle === 'nw') { sel.width += sel.x - coords.x; sel.height += sel.y - coords.y; sel.x = coords.x; sel.y = coords.y; }
+                    else if (cropHandle === 'ne') { sel.width = coords.x - sel.x; sel.height += sel.y - coords.y; sel.y = coords.y; }
+                    else if (cropHandle === 'sw') { sel.width += sel.x - coords.x; sel.height = coords.y - sel.y; sel.x = coords.x; }
+                    else if (cropHandle === 'se') { sel.width = coords.x - sel.x; sel.height = coords.y - sel.y; }
+                    sel.width = Math.max(50, sel.width);
+                    sel.height = Math.max(50, sel.height);
+                } else {
+                    const x = Math.min(cropStartX, coords.x);
+                    const y = Math.min(cropStartY, coords.y);
+                    const width = Math.abs(coords.x - cropStartX);
+                    const height = Math.abs(coords.y - cropStartY);
+                    cropSelection = { x, y, width, height };
+                }
+                showCropOverlay(cropSelection);
+            }
+            
+            function handleEnd() { cropDragging = false; cropHandle = null; }
+            
+            cropCanvas.addEventListener('mousedown', handleStart);
+            cropCanvas.addEventListener('touchstart', handleStart);
+            document.addEventListener('mousemove', handleMove);
+            document.addEventListener('touchmove', handleMove, { passive: false });
+            document.addEventListener('mouseup', handleEnd);
+            document.addEventListener('touchend', handleEnd);
+            
+            document.querySelectorAll('.crop-handle').forEach(h => {
+                h.addEventListener('mousedown', handleStart);
+                h.addEventListener('touchstart', handleStart);
+            });
+        }
+
+        function showCropOverlay(sel) {
+            const overlay = document.getElementById('cropOverlay');
+            const rect = cropCanvas.getBoundingClientRect();
+            const scaleX = rect.width / cropCanvas.width;
+            const scaleY = rect.height / cropCanvas.height;
+            overlay.style.left = (sel.x * scaleX) + 'px';
+            overlay.style.top = (sel.y * scaleY) + 'px';
+            overlay.style.width = (sel.width * scaleX) + 'px';
+            overlay.style.height = (sel.height * scaleY) + 'px';
+            overlay.style.display = 'block';
+        }
+
+        function resetCrop() {
+            cropSelection = null;
+            cropData = null;
+            document.getElementById('cropOverlay').style.display = 'none';
+            document.getElementById('cropStatus').style.display = 'none';
+            cropCtx.drawImage(videoElement, 0, 0);
+        }
+
+        function applyCrop() {
+            if (!cropSelection) return alert('Select crop area first!');
+            cropData = { ...cropSelection };
+            document.getElementById('cropStatus').style.display = 'block';
+            closeCropModal();
+        }
+
+        function updateStats() {
+            if (!videoElement) return;
+            const width = parseInt(document.getElementById('width').value);
+            const height = parseInt(document.getElementById('height').value);
+            const fps = parseInt(document.getElementById('fps').value);
+            const duration = trimData.end - trimData.start;
+            const frameCount = Math.floor(duration * fps);
+            const estSize = (frameCount * width * height * 3 * 0.6) / (1024 * 1024);
+            
+            document.getElementById('stats').style.display = 'block';
+            document.getElementById('frameCount').textContent = frameCount;
+            document.getElementById('duration').textContent = duration.toFixed(2) + 's';
+            document.getElementById('estSize').textContent = estSize.toFixed(2) + ' MB';
+        }
+
+        function updateFinalStats() {
+            const width = parseInt(document.getElementById('width').value);
+            const height = parseInt(document.getElementById('height').value);
+            const fps = parseInt(document.getElementById('fps').value);
+            const duration = trimData.end - trimData.start;
+            const frameCount = Math.floor(duration * fps);
+            document.getElementById('finalRes').textContent = width + 'x' + height;
+            document.getElementById('finalFps').textContent = fps;
+            document.getElementById('finalFrames').textContent = frameCount;
+            document.getElementById('finalDuration').textContent = duration.toFixed(2) + 's';
+        }
+
+        // CRITICAL: Boot Animation Creation - DO NOT MODIFY!
+        async function createBootAnimation() {
+            if (!videoElement) return alert('Select video first!');
             const createBtn = document.getElementById('createBtn');
             const progress = document.getElementById('progress');
             const progressText = document.getElementById('progressText');
             const progressFill = document.getElementById('progressFill');
-            
             createBtn.disabled = true;
             progress.style.display = 'block';
             
@@ -356,109 +479,45 @@
                 const height = parseInt(document.getElementById('height').value);
                 const fps = parseInt(document.getElementById('fps').value);
                 const loopType = document.getElementById('loopType').value;
-                
-                // Create canvas
                 canvas = document.createElement('canvas');
                 canvas.width = width;
                 canvas.height = height;
                 ctx = canvas.getContext('2d');
-                
-                // Calculate frames
-                const duration = videoElement.duration;
+                const duration = trimData.end - trimData.start;
                 const totalFrames = Math.floor(duration * fps);
                 const frameDuration = 1 / fps;
                 
-                console.log('=== BootCraft - MajliTech Method ===');
-                console.log('Resolution:', width, 'x', height);
-                console.log('FPS:', fps);
-                console.log('Total Frames:', totalFrames);
-                console.log('Duration:', duration.toFixed(2), 'seconds');
-                
-                // Extract frames (using their %04d.png naming: 0001.png, 0002.png, ...)
                 progressText.textContent = 'Extracting frames...';
                 const frames = [];
-                
                 for (let i = 0; i < totalFrames; i++) {
-                    const time = i * frameDuration;
+                    const time = trimData.start + (i * frameDuration);
                     videoElement.currentTime = time;
-                    
-                    await new Promise(resolve => {
-                        videoElement.addEventListener('seeked', resolve, { once: true });
-                    });
-                    
-                    ctx.drawImage(videoElement, 0, 0, width, height);
+                    await new Promise(resolve => { videoElement.addEventListener('seeked', resolve, { once: true }); });
+                    if (cropData) {
+                        ctx.drawImage(videoElement, cropData.x, cropData.y, cropData.width, cropData.height, 0, 0, width, height);
+                    } else {
+                        ctx.drawImage(videoElement, 0, 0, width, height);
+                    }
                     const dataUrl = canvas.toDataURL('image/png');
                     const base64Data = dataUrl.split(',')[1];
-                    
-                    // Frame naming: %04d format (0001, 0002, 0003, ...)
-                    // This matches their FFmpeg command: %04d.png
                     const frameNumber = String(i + 1).padStart(4, '0');
                     const frameName = `${frameNumber}.png`;
-                    
-                    frames.push({
-                        name: frameName,
-                        data: base64Data
-                    });
-                    
+                    frames.push({ name: frameName, data: base64Data });
                     const percent = Math.floor(((i + 1) / totalFrames) * 100);
                     progressFill.style.width = percent + '%';
                     progressFill.textContent = percent + '%';
                 }
                 
-                console.log('Frames extracted:', frames.length);
-                console.log('First frame:', frames[0].name);
-                console.log('Last frame:', frames[frames.length - 1].name);
-                
-                // Create desc.txt (EXACTLY like their gen_desc function)
-                // Line 39: header = f"{specs['height']} {specs['width']} {specs['fps']}\n"
-                // Line 42: appe = f"{i['type']} {i['count']} {i['delay']} part{i['part']}\n"
-                progressText.textContent = 'Creating desc.txt...';
-                
-                const descContent = `${height} ${width} ${fps}\n${loopType} 0 0 part0\n`;
-                
-                console.log('=== desc.txt Content ===');
-                console.log(descContent);
-                console.log('Line endings check:', descContent.includes('\r') ? 'CRLF (BAD!)' : 'LF only (GOOD!)');
-                
-                // Create ZIP (FIXED from their buggy version)
-                // Their bug (line 80): compresslevel=zipfile.ZIP_DEFLATED
-                // Fixed: compression: 'STORE' (no compression)
                 progressText.textContent = 'Creating bootanimation.zip...';
-                
+                const descContent = `${height} ${width} ${fps}\n${loopType} 0 0 part0\n`;
                 const zip = new JSZip();
-                
-                // Add desc.txt FIRST (important for Android)
-                zip.file('desc.txt', descContent, {
-                    compression: 'STORE',
-                    binary: false
-                });
-                
-                // Create part0 folder
+                zip.file('desc.txt', descContent, { compression: 'STORE', binary: false });
                 const part0 = zip.folder('part0');
-                
-                // Add frames to part0
                 for (let frame of frames) {
-                    part0.file(frame.name, frame.data, {
-                        base64: true,
-                        compression: 'STORE'  // FIXED: Use STORE not DEFLATED
-                    });
+                    part0.file(frame.name, frame.data, { base64: true, compression: 'STORE' });
                 }
+                const content = await zip.generateAsync({ type: 'blob', compression: 'STORE', compressionOptions: { level: 0 }, platform: 'UNIX', streamFiles: false });
                 
-                progressText.textContent = 'Generating ZIP file...';
-                
-                const content = await zip.generateAsync({
-                    type: 'blob',
-                    compression: 'STORE',              // FIXED: STORE not DEFLATED
-                    compressionOptions: { level: 0 },  // No compression
-                    platform: 'UNIX',                  // Unix platform
-                    streamFiles: false
-                });
-                
-                const sizeMB = (content.size / (1024 * 1024)).toFixed(2);
-                console.log('ZIP size:', sizeMB, 'MB');
-                console.log('Compression: STORE (none)');
-                
-                // Download
                 const url = URL.createObjectURL(content);
                 const a = document.createElement('a');
                 a.href = url;
@@ -466,31 +525,12 @@
                 a.click();
                 URL.revokeObjectURL(url);
                 
-                progressText.textContent = '✅ Success! Boot animation created!';
+                progressText.textContent = '✅ Success!';
                 progressFill.style.width = '100%';
                 progressFill.textContent = '100%';
-                
-                console.log('=== Console Summary ===');
-                console.log('✅ Frames: ' + totalFrames);
-                console.log('✅ Naming: 0001.png format (matches FFmpeg %04d)');
-                console.log('✅ desc.txt: Unix LF line endings (FIXED)');
-                console.log('✅ ZIP compression: STORE (FIXED from DEFLATED bug)');
-                console.log('✅ File size: ' + sizeMB + ' MB');
-                
-                if (totalFrames > 120) {
-                    console.warn('⚠️ Warning: ' + totalFrames + ' frames may be too many');
-                }
-                if (sizeMB > 10) {
-                    console.warn('⚠️ Warning: ' + sizeMB + ' MB may be too large');
-                }
-                if (fps > 15) {
-                    console.warn('⚠️ Warning: ' + fps + ' FPS may be too high for boot');
-                }
-                
             } catch (error) {
-                console.error('Error:', error);
-                alert('Error creating boot animation: ' + error.message);
-                progressText.textContent = '❌ Error: ' + error.message;
+                alert('Error: ' + error.message);
+                progressText.textContent = '❌ Error';
             } finally {
                 createBtn.disabled = false;
             }
